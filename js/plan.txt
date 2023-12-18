@@ -1,0 +1,19 @@
+# DATA BASE OBJECT RESPONSIBILITIES ---->
+    get an list of objects in json format via the user id 
+    add json in the list on the net 
+    batch udpate the records using user id .
+        insert 
+        remove 
+        change 
+        according to the action
+to be hosted on server as a seperate entity 
+ SOCKET ADDRESS 
+ what would be the normal request to listen on 
+ messages between the systems and communication method
+
+Socket side 
+ initiate connection
+ start listening 
+ on connected code 
+ on message code 
+ on error code 

@@ -1,0 +1,197 @@
+body, html{
+    height: 100%;
+    margin: 0%;
+    font: 400 18px 'Roboto', sans-serif;
+}
+
+.scrollable_view{
+    height: fit-content;
+    width: 100%;
+}
+.main_content{
+    display: flex;
+    background-color: #efeff3;
+    height: 100vh;
+}
+.side_panel{
+    background-color: rgb(13, 112, 53);
+    color: beige;
+         
+}
+.data_panel{
+    flex: 1;
+    background-image: url('../images/leafbackground2-small.jpg');
+}
+ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.side_panel_tab{
+    align-self: start;
+    padding: 1rem 4rem;
+    font-weight: 600;
+    font-style: normal;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.floating_view{
+    position: fixed;
+    bottom: 0px;
+    background-color: rgb(4, 49, 22);
+    width: 100%;
+    padding: 20px;
+    animation: bottomBarAnimation 1.0s;
+}
+@keyframes bottomBarAnimation {
+    from {bottom:-300px}
+    to   {bottom: 0px}
+}
+@keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+#mic_button_pill{
+    height: 3rem;
+    width: 12rem;
+    border-radius: 40px;
+    border: none;
+    background-color: saddlebrown;
+    color: beige;
+    font-weight: 900;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    align-items: center;
+}
+
+#mic_button_pill:hover{
+    color: black;
+    font-weight: 800;
+    background-color: brown;
+    border: 2px solid saddlebrown;
+}
+.icon-image-style{
+    height: 2rem;
+    width: 2rem;
+    margin: 5px;
+}
+.side_panel_tab:hover{
+    background-color: rgb(4, 49, 22);
+  
+}
+.popup-base{
+    height: 5%;
+    width: 75%;
+    top: 5vh;
+    left: 40vh;
+    padding: 15px 10px;
+    background-color: white;
+    display: border-box;
+    position: fixed;
+    border: solid black 1px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px rgb(25, 25, 25);
+}
+.prompt-text{
+    display: inline-block;
+    width: 75%;
+    height: fit-content;
+    font-size: 3.5vh;
+}
+.approved-btn{
+    
+}
+.cancel-btn{
+    
+}
+.register-container{
+    width: 50%;
+    height: 50%;
+    position: relative;
+    left: 25%;
+    top: 50px;
+}
+.login-container{
+    width: 25%;
+    height: 25%;
+    position: relative;
+    left: 35%;
+    top: 75px;
+}
+.container_base{
+    
+    
+    background-color: white;
+    padding: 10px;
+    border: 2px solid gray;
+    border-radius: 15px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    box-shadow: 0px 0px 3px rgb(13, 112, 53);
+    display: flex;
+    flex-direction: column;
+}
+.heading_style{
+    margin: 10px;
+    color: rgb(13, 112, 53);
+    font: 700 40px 'Hevelitica', sans-serif ;
+}
+.text_field_style{
+    width: 100%;
+    height: 22%;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: rgb(183, 182, 182);
+    background-color:white;
+    margin-bottom: 10px;
+    font: 'Roboto', sans-serif;
+    font-weight: 500;
+    padding: 8px;
+    box-shadow: none;
+}
+.text_field_style:hover{
+    border-color: rgb(18, 202, 70);
+    font-weight: 600;
+    /* box-shadow: 0px 0px 5px rgb(44, 195, 208); */
+}
+.register-btn{
+    border: solid;
+    width: 50%;
+    height: 20%;
+    border-radius: 5px;
+    background-color: black;
+    color: beige;
+    font-weight: 700;
+    position: relative;
+    left:25%;
+}
+.register-btn:hover{
+    background-color: beige;
+    color: black;
+    
+}
+.para-txt{
+    margin: 10px;
+    font-weight: bolder;
+}
+.loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #20331a;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: 100px;
+    left: 45%;
+    animation: spin 1s linear infinite; /* Apply the animation */
+    margin: 10px ; /* Adjust margin as needed */
+  }
+.text_fields{
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <title>Sales Bot Application</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height ,
+                                       initial_scale=1.0"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+
+    <!-- <script type="text/javascript" src="js/script.js"></script> -->
+    <!-- Start importing the CSS styles own and AG Grids in order of AGGrid -- > styles.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"
+    />
+    <!-- Include the theme CSS, only need to import the theme you are going to use -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"
+    />
+  </head>
+  <body>
+    <main class="main_content">
+      <section class="side_panel">
+        <ul>
+          <li class="side_panel_tab">Home</li>
+          <li class="side_panel_tab">About</li>
+          <li class="side_panel_tab">Events</li>
+          <li class="side_panel_tab">Table</li>
+        </ul>
+      </section>
+      <section class="data_panel">
+        <!-- <div class="fixed_page">
+          <h1 class="heading_style">Register</h1>
+          <form class="container_base" method="post">
+            <input
+              class="text_field_style"
+              type="email"
+              name="user_email"
+              id="u_email_box"
+              placeholder="Email"
+            />
+            <input
+              class="text_field_style"
+              type="password"
+              name="user_password"
+              id="u_password_box"
+              placeholder="Password"
+            />
+
+            <input
+              class="text_field_style"
+              type="text"
+              name="user_name"
+              id="u_name"
+              placeholder="Name"
+            />
+
+            <input
+              type="tel"
+              class="text_field_style"
+              name="user_phone"
+              id="u_phone"
+              placeholder="Phone"
+            />
+
+            <input
+              class="text_field_style"
+              type="text"
+              name="user_address"
+              id="u_address"
+              placeholder="Address"
+            />
+
+            <input class="register-btn" type="button" value="Register" />
+          </form>
+        </div> -->
+        <!-- <div class="fixed_page">
+          <h1 class="heading_style">Login</h1>
+          <p class="para-txt">
+            Welcome to your account management system.....<br />Enter your email
+            and password to enter....
+          </p>
+           <div class="loader"></div> 
+          <form class="container_base login-container" method="post">
+            <input
+              class="text_field_style"
+              type="email"
+              name="user_email"
+              id="u_email_box"
+              placeholder="Email"
+            />
+            <input
+              class="text_field_style"
+              type="password"
+              name="user_password"
+              id="u_password_box"
+              placeholder="Password"
+            />
+            <input
+              class="register-btn"
+              type="button"
+              value="Enter your portal"
+            />
+          </form>
+        </div> -->
+        <div id="scrollable_view" class="ag-theme-alpine"></div>
+
+        <div class="floating_view">
+          <button id="mic_button_pill">
+            <svg height="50" width="50">
+              <image
+                href="./images/hearing-270_x_270.png"
+                height="50"
+                width="50"
+              />
+            </svg>
+            Listen to you
+          </button>
+        </div>
+      </section>
+      <!-- <section class="popup-base">
+        <div class="prompt-text">Ok Add ..................</div>
+        <button class="approved-btn">Perfect</button>
+        <button class="cancel_btn">No, Cancel</button>
+      </section> -->
+    </main>
+
+    <script type="text/javascript" src="js/app.js"></script>
+  </body>
+</html>

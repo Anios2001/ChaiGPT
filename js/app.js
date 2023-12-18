@@ -9,6 +9,7 @@ const columnDefination= [
     {field:"total"}
 ];
 var gridHolder=null;
+var loader= null;
 const gridOptions= {
     columnDefs: columnDefination,
     defaultColDef:{sortable: true, filter: true, editable:true},
@@ -21,6 +22,7 @@ const showTableData = function (data){
     console.error('Grid Reference Error');
     gridOptions.api.setRowData(data);   
 };
+
 //Data Operations start here 
 //Update Data Stream Ops 
 const register= function (user_data)
@@ -57,9 +59,9 @@ return fetch('/authenticate',
     throw new Error('Network Response is not ok');
 }).then((data)=>{
     if(data && data['msg'])
-     console.log(data['msg']);
+     return data['msg'];
     else
-     console.log(data['auth_id']);
+     return data['auth_id'];
 });
 };
 //socket_handler.on('s_data',(data)=>{
@@ -79,6 +81,42 @@ return fetch('/authenticate',
 //    }
 //});
 //Fetch data Ops
+function submitForm(email, pass){
+  return authenticate({email:email, password:pass});
+}
+function checkResults(auth_token){
+
+    if(auth_token==undefined || auth_token==null)
+      return 102;
+    else if ('/\s/'.test(auth_token))
+      return 103;
+    else
+      return 1;
+}
+function openPortal(passableData){
+    const current = document.getElementById('login_page');
+    current.style.display= 'none';
+    const portal = document.getElementById('scrollable_view');
+    portal.style.display= 'block';
+}
+function showErrorPopup(errorMessage) {
+    var errorPopup = document.getElementById('errorPopup');
+    const error_holder= document.querySelector('#errorPopup + p');
+    error_holder.textContent= errorMessage;
+    errorPopup.classList.add('show'); // Add the 'show' class to display the popup
+    setTimeout(function() {
+      hideErrorPopup(); // Hide the popup after 3 seconds (adjust as needed)
+    }, 3000); // 3000 milliseconds = 3 seconds
+}
+  
+function hideErrorPopup() {
+    var errorPopup = document.getElementById('errorPopup');
+    errorPopup.classList.remove('show'); // Remove the 'show' class to hide the popup
+}
+function showError(errorString){
+    showErrorPopup(errorString);
+    console.error(errorString);
+}
 const startFetchingData= (url)=>fetch('/getData').then((response)=>{
     if(response.ok){
       return response.json();
@@ -96,10 +134,39 @@ const startFetchingData= (url)=>fetch('/getData').then((response)=>{
     console.error("CLIENT END:: Server Data Fetch failed", error);
 }); 
 document.addEventListener('DOMContentLoaded', ()=>{
-    gridHolder= document.getElementById('scrollable_view');
+    // gridHolder= document.getElementById('scrollable_view');
     //startFetchingData();
-    console.log("Loaded");
-    authenticate().catch(e=>console.error(e));
+    loader = document.getElementsByClassName('loader').item(0);
+    const loginHolder= document.getElementsByClassName('login-container').item(0);
+    loader.style.display= 'none';//enable by block
+    loginHolder.addEventListener('submit', function(event){
+        var email= document.getElementById('user_email').value;
+        var password= document.getElementById('user_password').value;
+        loader.style.display='block';
+        loginHolder.style.display='none'; 
+        submitForm(email,password).then((response)=>{
+            const res_code= checkResults(response);
+            switch(res_code){
+                case 1:
+                    loader.style.display= 'none';
+                    loginHolder.style.display= 'block';
+                    openPortal(response);
+                    break;
+                case 102:
+                case 103:
+                    loader.style.display='none';
+                    showError(response);
+                    loginHolder.style.display= 'block';
+                    break;
+                default:
+                    loader.style.display='none';
+                    showError('{DEBUG}:Invalid data or null res_code');
+                    loginHolder.style.display= 'none';        
+            }  
+           
+        });
+        
+    });
     
 });
 

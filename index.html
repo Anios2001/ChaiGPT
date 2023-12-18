@@ -34,7 +34,11 @@
         </ul>
       </section>
       <section class="data_panel">
-        <!-- <div class="fixed_page">
+        <div id="errorPopup" class="error-popup">
+          <span class="close-btn" onclick="hideErrorPopup()">&times;</span>
+          <p>Error: Something went wrong!</p>
+        </div>
+        <div id="register_page" class="fixed_page">
           <h1 class="heading_style">Register</h1>
           <form class="container_base" method="post">
             <input
@@ -78,14 +82,14 @@
 
             <input class="register-btn" type="button" value="Register" />
           </form>
-        </div> -->
-        <!-- <div class="fixed_page">
+        </div>
+        <div id="login_page" class="fixed_page">
           <h1 class="heading_style">Login</h1>
           <p class="para-txt">
             Welcome to your account management system.....<br />Enter your email
             and password to enter....
           </p>
-           <div class="loader"></div> 
+          <div class="loader"></div>
           <form class="container_base login-container" method="post">
             <input
               class="text_field_style"
@@ -107,7 +111,7 @@
               value="Enter your portal"
             />
           </form>
-        </div> -->
+        </div>
         <div id="scrollable_view" class="ag-theme-alpine"></div>
 
         <div class="floating_view">

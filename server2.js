@@ -4,7 +4,7 @@ const http= require('http');
 const app = express();
 const port= 8000;
 const streamingServer = http.createServer(app);
-
+app.use(express.static(path.join(__dirname, '')));
 app.use(express.json());
 
 app.post('/auth',(req, res)=>{

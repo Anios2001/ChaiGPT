@@ -45,11 +45,11 @@ return fetch('/register',{
      console.log(data['auth_id']);
 });};
 const authenticate = function (data){
-return fetch('/authenticate', 
+return fetch("/authenticate", 
 {
- method:'POST',
+ method:"POST",
  headers:{
-    'Content-Type':'application/json'
+    "Content-Type":"application/json"
  },
  body:JSON.stringify(data),
 

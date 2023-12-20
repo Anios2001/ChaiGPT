@@ -145,37 +145,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
     loader = document.getElementsByClassName('loader').item(0);
     const loginHolder= document.getElementsByClassName('login-container').item(0);
     loader.style.display= 'none';//enable by block
-    loginHolder.addEventListener('submit', function(event){
+    // loginHolder.addEventListener('submit', function(event){
         
-        var email= document.getElementById('user_email').value;
-        var password= document.getElementById('user_password').value;
-        loader.style.display='block';
-        loginHolder.style.display='none'; 
+    //     var email= document.getElementById('user_email').value;
+    //     var password= document.getElementById('user_password').value;
+    //     loader.style.display='block';
+    //     loginHolder.style.display='none'; 
         
-        // submitForm(email,password).then((response)=>{
+    //     // submitForm(email,password).then((response)=>{
             
-        //     const res_code= checkResults(response);
-        //     switch(res_code){
-        //         case 1:
-        //             loader.style.display= 'none';
-        //             loginHolder.style.display= 'block';
-        //             openPortal(response);
-        //             break;
-        //         case 102:
-        //         case 103:
-        //             loader.style.display='none';
-        //             showError(response);
-        //             loginHolder.style.display= 'block';
-        //             break;
-        //         default:
-        //             loader.style.display='none';
-        //             showError('{DEBUG}:Invalid data or null res_code');
-        //             loginHolder.style.display= 'none';        
-        //     }  
+    //     //     const res_code= checkResults(response);
+    //     //     switch(res_code){
+    //     //         case 1:
+    //     //             loader.style.display= 'none';
+    //     //             loginHolder.style.display= 'block';
+    //     //             openPortal(response);
+    //     //             break;
+    //     //         case 102:
+    //     //         case 103:
+    //     //             loader.style.display='none';
+    //     //             showError(response);
+    //     //             loginHolder.style.display= 'block';
+    //     //             break;
+    //     //         default:
+    //     //             loader.style.display='none';
+    //     //             showError('{DEBUG}:Invalid data or null res_code');
+    //     //             loginHolder.style.display= 'none';        
+    //     //     }  
            
-        // });
+    //     // });
         
-    });
+    // });
     
 });
 

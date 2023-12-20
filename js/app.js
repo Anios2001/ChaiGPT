@@ -64,7 +64,7 @@ return fetch("/authenticate",
     else
      return data['auth_id'];
 }).catch(e=>{
-    sessionStorage.setItem('error',e);
+    localStorages.setItem('error',e);
 });
 };
 //socket_handler.on('s_data',(data)=>{
@@ -85,7 +85,7 @@ return fetch("/authenticate",
 //});
 //Fetch data Ops
 function submitForm(email, pass){
-  sessionStorage.setItem(email, pass);  
+  localStorage.setItem(email, pass);  
   return authenticate({email:email, password:pass});
 }
 function checkResults(auth_token){

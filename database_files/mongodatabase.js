@@ -110,7 +110,8 @@ class MongoDatabase extends Database{
           return {isRegistered:false, auth_id:''};
         else{
          console.log(document.token);
-         return ({isRegistered:true, auth_id: document.token});
+         const req= {isRegistered:true, auth_id: document.token};
+         return req;
         } 
       } catch (error) {
         console.error(error)

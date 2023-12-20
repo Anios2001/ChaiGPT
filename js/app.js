@@ -95,7 +95,7 @@ function checkResults(auth_token){
 
     if(auth_token==undefined || auth_token==null)
       return 102;
-    else if ('/^\s*$/'.test(auth_token))
+    else if (/^\s*$/.test(auth_token))
       return 103;
     else
       return 1;

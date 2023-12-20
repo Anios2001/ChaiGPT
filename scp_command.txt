@@ -1,2 +1,2 @@
 cd "C:\Users\lenovo\Documents\keyFolder"
-scp -i aniketInstance.pem "C:\Users\lenovo\Documents\Web development Projects\table_implementation\google_text_to_speech.py" "C:\Users\lenovo\Documents\Web development Projects\table_implementation\textGenerationGPT.py" ubuntu@ec2-3-110-30-158.ap-south-1.compute.amazonaws.com:/home/ubuntu
+scp -i aniketInstance.pem "" ubuntu@ec2-3-110-30-158.ap-south-1.compute.amazonaws.com:/home/ubuntu

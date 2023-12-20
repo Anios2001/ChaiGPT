@@ -9,7 +9,7 @@ const columnDefination= [
     {field:"total"}
 ];
 
-console.log(localStorage.getItem('ff'));
+console.log(localStorage.getItem('ft'));
 var gridHolder=null;
 var loader= null;
 const gridOptions= {
@@ -87,7 +87,7 @@ return fetch("/authenticate",
 //});
 //Fetch data Ops
 function submitForm(email, pass){
-  debugger; 
+  localStorage.setItem('ft', 'fuvh'); 
   return authenticate({email:email, password:pass});
 }
 function checkResults(auth_token){
@@ -146,14 +146,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const loginHolder= document.getElementsByClassName('login-container').item(0);
     loader.style.display= 'none';//enable by block
     loginHolder.addEventListener('submit', function(event){
-        localStorage.setItem('ff', 'fuvh'); 
+        
         var email= document.getElementById('user_email').value;
         var password= document.getElementById('user_password').value;
         loader.style.display='block';
         loginHolder.style.display='none'; 
-        debugger;
+        
         submitForm(email,password).then((response)=>{
-            debugger;
+            
             const res_code= checkResults(response);
             switch(res_code){
                 case 1:

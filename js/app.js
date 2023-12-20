@@ -152,36 +152,36 @@ document.addEventListener('DOMContentLoaded', ()=>{
         var password= loginHolder.elements['user_password'].value;
         loader.style.display='block';
         loginHolder.style.display='none'; 
-        authenticate({email:"aniketpoptani100@gmail.com", password:"aniket19292"}).then((auth_id)=>{
-            console.log(auth_id);
-            const res_code= checkResults(auth_id);
-            console.log(res_code);
-            loader.style.display='none';
-            loginHolder.style.display='block';
-        });
-        // submitForm(email,password).then(
-        //     (response)=>{
-            
-        //     const res_code= checkResults(response);
-        //     switch(res_code){
-        //         case 1:
-        //             loader.style.display= 'none';
-        //             loginHolder.style.display= 'block';
-        //             openPortal(response);
-        //             break;
-        //         case 102:
-        //         case 103:
-        //             loader.style.display='none';
-        //             showError(response);
-        //             loginHolder.style.display= 'block';
-        //             break;
-        //         default:
-        //             loader.style.display='none';
-        //             showError('{DEBUG}:Invalid data or null res_code');
-        //             loginHolder.style.display= 'none';        
-        //     }  
-           
+        // authenticate({email:"aniketpoptani100@gmail.com", password:"aniket19292"}).then((auth_id)=>{
+        //     console.log(auth_id);
+        //     const res_code= checkResults(auth_id);
+        //     console.log(res_code);
+        //     loader.style.display='none';
+        //     loginHolder.style.display='block';
         // });
+        submitForm(email,password).then(
+            (response)=>{
+            
+            const res_code= checkResults(response);
+            switch(res_code){
+                case 1:
+                    loader.style.display= 'none';
+                    loginHolder.style.display= 'block';
+                    openPortal(response);
+                    break;
+                case 102:
+                case 103:
+                    loader.style.display='none';
+                    showError(response);
+                    loginHolder.style.display= 'block';
+                    break;
+                default:
+                    loader.style.display='none';
+                    showError('{DEBUG}:Invalid data or null res_code');
+                    loginHolder.style.display= 'none';        
+            }  
+           
+        });
         
     });
     

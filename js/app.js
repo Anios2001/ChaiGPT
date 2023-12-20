@@ -82,7 +82,7 @@ return fetch("/authenticate",
 //});
 //Fetch data Ops
 function submitForm(email, pass){
-  console.print(email, pass);  
+  console.log(email, pass);  
   return authenticate({email:email, password:pass});
 }
 function checkResults(auth_token){

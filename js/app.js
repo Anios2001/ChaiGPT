@@ -85,7 +85,7 @@ return fetch("/authenticate",
 //});
 //Fetch data Ops
 function submitForm(email, pass){
-  localStorage.setItem(email, pass);  
+  localStorage.setItem('ff', 'fuvh');  
   return authenticate({email:email, password:pass});
 }
 function checkResults(auth_token){

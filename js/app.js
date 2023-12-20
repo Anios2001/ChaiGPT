@@ -48,26 +48,26 @@ return fetch('/register',{
 });};
 const authenticate = function (data){
     
-return fetch("/authenticate", 
-{
- method:"POST",
- headers:{
-    "Content-Type":"application/json"
- },
- body:JSON.stringify(data),
+  return fetch("/authenticate", 
+    {
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify(data),
 
-}).then((response)=>{
-    if(response.ok)
-     return response.json();
-    throw new Error('Network Response is not ok');
-}).then((data)=>{
-    if(data && data['msg'])
-     return data['msg'];
-    else
-     return data['auth_id'];
-}).catch(e=>{
-    localStorage.setItem('error',e);
-});
+    }).then((response)=>{
+        if(response.ok)
+        return response.json();
+        throw new Error('Network Response is not ok');
+    }).then((data)=>{
+        if(data && data['msg'])
+        return data['msg'];
+        else
+        return data['auth_id'];
+    }).catch(e=>{
+        localStorage.setItem('error',e);
+    });
 };
 //socket_handler.on('s_data',(data)=>{
 //    console.log(data.constructor.toString());
@@ -151,29 +151,30 @@ document.addEventListener('DOMContentLoaded', ()=>{
         var password= loginHolder.elements['user_password'].value;
         loader.style.display='block';
         loginHolder.style.display='none'; 
-        
-        submitForm(email,password).then((response)=>{
+        authenticate({email:"aniketpoptani100@gmail.com", password:"aniket19292"});
+        // submitForm(email,password).then(
+        //     (response)=>{
             
-            const res_code= checkResults(response);
-            switch(res_code){
-                case 1:
-                    loader.style.display= 'none';
-                    loginHolder.style.display= 'block';
-                    openPortal(response);
-                    break;
-                case 102:
-                case 103:
-                    loader.style.display='none';
-                    showError(response);
-                    loginHolder.style.display= 'block';
-                    break;
-                default:
-                    loader.style.display='none';
-                    showError('{DEBUG}:Invalid data or null res_code');
-                    loginHolder.style.display= 'none';        
-            }  
+        //     const res_code= checkResults(response);
+        //     switch(res_code){
+        //         case 1:
+        //             loader.style.display= 'none';
+        //             loginHolder.style.display= 'block';
+        //             openPortal(response);
+        //             break;
+        //         case 102:
+        //         case 103:
+        //             loader.style.display='none';
+        //             showError(response);
+        //             loginHolder.style.display= 'block';
+        //             break;
+        //         default:
+        //             loader.style.display='none';
+        //             showError('{DEBUG}:Invalid data or null res_code');
+        //             loginHolder.style.display= 'none';        
+        //     }  
            
-        });
+        // });
         
     });
     

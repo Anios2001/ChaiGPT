@@ -61,6 +61,7 @@ const authenticate = function (data){
         return response.json();
         throw new Error('Network Response is not ok');
     }).then((data)=>{
+        console.log(data);
         if(data && data['msg'])
         return data['msg'];
         else
@@ -151,10 +152,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
         var password= loginHolder.elements['user_password'].value;
         loader.style.display='block';
         loginHolder.style.display='none'; 
-        authenticate({email:"aniketpoptani100@gmail.com", password:"aniket19292"}).then((response)=>{
-            console.log(response);
-            const response_json= JSON.parse(response);
-            const res_code= checkResults(response_json.auth_id);
+        authenticate({email:"aniketpoptani100@gmail.com", password:"aniket19292"}).then((auth_id)=>{
+            console.log(auth_id);
+            const res_code= checkResults(auth_id);
             console.log(res_code);
             loader.style.display='none';
             loginHolder.style.display='block';

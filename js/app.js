@@ -66,7 +66,7 @@ return fetch("/authenticate",
     else
      return data['auth_id'];
 }).catch(e=>{
-    localStorages.setItem('error',e);
+    localStorage.setItem('error',e);
 });
 };
 //socket_handler.on('s_data',(data)=>{
@@ -87,7 +87,7 @@ return fetch("/authenticate",
 //});
 //Fetch data Ops
 function submitForm(email, pass){
-   
+  debugger; 
   return authenticate({email:email, password:pass});
 }
 function checkResults(auth_token){
@@ -151,7 +151,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
         var password= document.getElementById('user_password').value;
         loader.style.display='block';
         loginHolder.style.display='none'; 
+        debugger;
         submitForm(email,password).then((response)=>{
+            debugger;
             const res_code= checkResults(response);
             switch(res_code){
                 case 1:

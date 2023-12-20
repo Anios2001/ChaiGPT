@@ -8,7 +8,7 @@ const columnDefination= [
     {field:"discount"},
     {field:"total"}
 ];
-localStorage.setItem('ff', 'fuvh'); 
+
 console.log(localStorage.getItem('ff'));
 var gridHolder=null;
 var loader= null;
@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const loginHolder= document.getElementsByClassName('login-container').item(0);
     loader.style.display= 'none';//enable by block
     loginHolder.addEventListener('submit', function(event){
+        localStorage.setItem('ff', 'fuvh'); 
         var email= document.getElementById('user_email').value;
         var password= document.getElementById('user_password').value;
         loader.style.display='block';

@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         loader.style.display='block';
         loginHolder.style.display='none'; 
         authenticate({email:"aniketpoptani100@gmail.com", password:"aniket19292"}).then((response)=>{
-            const res_code= checkResults(response);
+            const res_code= checkResults(response.auth_id);
             console.log(res_code);
             loader.style.display='none';
             loginHolder.style.display='block';

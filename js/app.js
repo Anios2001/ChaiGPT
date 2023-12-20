@@ -8,6 +8,7 @@ const columnDefination= [
     {field:"discount"},
     {field:"total"}
 ];
+console.log(localStorage.getItem('ff'));
 var gridHolder=null;
 var loader= null;
 const gridOptions= {

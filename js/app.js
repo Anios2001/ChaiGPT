@@ -143,12 +143,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
     // gridHolder= document.getElementById('scrollable_view');
     //startFetchingData();
     loader = document.getElementsByClassName('loader').item(0);
-    const loginHolder= document.getElementsByClassName('login-container').item(0);
+    const loginHolder= document.getElementById('login_form');
     loader.style.display= 'none';//enable by block
     loginHolder.addEventListener('submit', function(event){
         event.preventDefault();   
-        var email= document.getElementById('user_email').value;
-        var password= document.getElementById('user_password').value;
+        var email= loginHolder.elements['user_email'].value;
+        var password= loginHolder.elements['user_password'].value;
         loader.style.display='block';
         loginHolder.style.display='none'; 
         

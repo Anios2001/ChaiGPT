@@ -67,7 +67,7 @@ app.get('/getDataStream', async (req,res)=>{
 //3 authenticate user using email and password
 app.post('/authenticate', async (req,res)=>{
    const auth_data= req.body;
-   
+   console.log('Auth Request ');
    //getToken
    //const auth_token= tokenGenerator.getToken(auth_data);
    //console.log(auth_token)   

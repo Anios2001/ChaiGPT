@@ -75,8 +75,8 @@ app.post('/authenticate', async (req,res)=>{
    //console.log(auth_data);
    var result= await databaseInstance.checkRegistration(auth_data);
    if(result.isRegistered){
-    console.log(result.token);
-    res.json({auth_id:result.token,is_authenticated:true});
+    console.log(result.auth_id);
+    res.json({auth_id:result.auth_id,is_authenticated:true});
    }
    else
     res.json({auth_id:'',is_authenticated:false});

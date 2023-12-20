@@ -62,8 +62,8 @@ const authenticate = function (data){
         throw new Error('Network Response is not ok');
     }).then((data)=>{
         console.log(data);
-        if(data && data['msg'])
-        return data['msg'];
+        if(data && data['auth_id']=='')
+        return '';
         else
         return data['auth_id'];
     }).catch(e=>{
@@ -95,7 +95,7 @@ function checkResults(auth_token){
 
     if(auth_token==undefined || auth_token==null)
       return 102;
-    else if ('/\s/'.test(auth_token))
+    else if ('/^\s*$/'.test(auth_token))
       return 103;
     else
       return 1;

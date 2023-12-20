@@ -51,7 +51,7 @@ return fetch("/authenticate",
  headers:{
     "Content-Type":"application/json"
  },
- body:data,
+ body:JSON.stringify(data),
 
 }).then((response)=>{
     if(response.ok)

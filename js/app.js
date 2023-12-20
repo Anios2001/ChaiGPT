@@ -107,7 +107,7 @@ function openPortal(passableData){
 }
 function showErrorPopup(errorMessage) {
     var errorPopup = document.getElementById('errorPopup');
-    const error_holder= document.querySelector('#errorPopup + p');
+    const error_holder= document.querySelector('#errorPopup > p');
     error_holder.textContent= errorMessage;
     errorPopup.classList.add('show'); // Add the 'show' class to display the popup
     setTimeout(function() {

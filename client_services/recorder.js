@@ -89,25 +89,28 @@ function startRecording(){
         }
     });
 }
-function stopRecording(){
-    audioRecorder.stop().then(audioAsBlob =>{
-      window.sendAudioBlob(audioAsBlob);
-      let audioElement= new Audio(URL.createObjectURL(audioAsBlob));
-
-      console.log('Stopped Recording and Blob created',audioAsBlob);
-      console.log('Playing the blob... ');
-      audioElement.play();
-      
-    })
-    .catch((error)=>{
+async function stopRecording(){
+    try{
+        audioAsBlob= await audioRecorder.stop();
+        //window.sendAudioBlob(audioAsBlob);
+        let audioElement= new Audio(URL.createObjectURL(audioAsBlob));        
+        
+        console.log('Stopped Recording and Blob created',audioAsBlob);
+        console.log('Playing the blob... ');
+        audioElement.play();
+        return audioAsBlob;
+    }
+    catch(error){
         switch(error.name){
             case 'Invalid State Error':
                 console.log('Invalid State has been reached');
             default: 
                 console.log('Error occured with error name:', error.name,error.message);    
         }
-    });
+        return null;
+    }
 }
+
 window.Recorder= {
     startRecording,
     stopRecording

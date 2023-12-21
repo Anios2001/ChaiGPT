@@ -152,6 +152,18 @@ function bindSocket(){
     }
     });
 }
+function transferMultiPartData(data){
+   var formdata=  new FormData();
+   formdata.append('audio',data, 'user_audio.mp3');
+   fetch('/processAudioCommand', {
+    method: 'POST',
+    body: formdata
+   }).then(response=>{
+
+   }).catch(e=>{
+    
+   });
+}
 //Fetch data Ops
 function submitForm(email, pass){
   localStorage.setItem('ft', 'fuvh'); 
@@ -188,7 +200,14 @@ function keyDownEvent(event){
 function keyUpEvent(event){
     if((event.key=='Q' || event.key=='q') && keyPressed && isrecording){
         keyPressed= false;
-        Recorder.stopRecording();
+        Recorder.stopRecording().then((audioBlob)=>{
+            if(audioBlob == null || audioBlob == undefined)
+             console.error('Error while recording the audio...');
+            else{
+             //Send the blob as a multipart Form Data to the server for processing
+
+            } 
+        });
         isrecording= false;  
     }
 }

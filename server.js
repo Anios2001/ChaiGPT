@@ -12,6 +12,7 @@ const socket= require('socket.io');
 const tokenGenerator= require('./token_files/getToken');
 // Database Library 
 const MongoDatabase= require('./database_files/mongodatabase');
+const multer= require('multer');
 var databaseInstance;
 //Server Configuration Code 
 const app = express();
@@ -77,6 +78,13 @@ app.post('/register',async (req,res)=>{
  else{
      res.send({msg:'Server recived an empty string'});
  }  
+});
+//get the Audio File for processing 
+app.post('/processAudioCommand',multer.single('audio'),(req, res)=>{
+  const audioBuffer =  req.file.buffer;
+  const base64buffer = audioBuffer.toString('base64');
+  //send for google speech recog
+  //answer to my own GPT command 
 });
 //2 getDataStream ---------
 app.get('/getDataStream', async (req,res)=>{

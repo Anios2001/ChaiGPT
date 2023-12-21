@@ -118,7 +118,21 @@ class MongoDatabase extends Database{
         console.error(error)
         return {isRegistered:false, auth_id:''};
       }
-  }
+  } 
+    async checkMemberShip(auth_id){
+      const req= {token: auth_id};
+      try{
+      const document = await this.collection.findOne(req);
+      if(document !== null && document!== undefined)
+       return true;
+      else
+       return false;
+      }
+      catch(e){
+        console.log(`Error while querying database for ${auth_id} : ${e}`);
+        return false;
+      }
 
+    }
 }
 module.exports= MongoDatabase;

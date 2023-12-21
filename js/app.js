@@ -1,7 +1,6 @@
 //Required to include the recorder api in html script tag
 
-//const socket_handler;
-
+var socket_handler= null;
 var keyPressed= false;
 var isrecording= false;
 const columnDefination= [
@@ -32,6 +31,7 @@ const showTableData = function (data){
 
 //Data Operations start here 
 //Update Data Stream Ops 
+//Register Interface ..
 const register= function (user_data)
 {
 console.log(JSON.stringify(user_data));
@@ -51,6 +51,7 @@ return fetch('/register',{
     else
      console.log(data['auth_id']);
 });};
+//Authentication Interface .....
 const authenticate = function (data){
     
   return fetch("/authenticate", 
@@ -75,22 +76,82 @@ const authenticate = function (data){
         localStorage.setItem('error',e);
     });
 };
-socket_handler.on('s_data',(data)=>{
-   console.log(data.constructor.toString());
 
-} );
-socket_handler.on('dataUpdate',(change)=>{
-   if (change.operationType === 'insert') {
-        // Handle insert operation
-       gridOptions.api.applyTransaction({ add: [change.fullDocument] });
-   } else if (change.operationType === 'update') {
-        // Handle update operation
-       gridOptions.api.applyTransaction({ update: [change.fullDocument] });
-   } else if (change.operationType === 'delete') {
-        // Handle delete operation
-       gridOptions.api.applyTransaction({ remove: [change.documentKey] });
-   }
-});
+//Script loader 
+function loadScript(url, callback){
+    if(url == null || url== undefined){
+     console.error('Url is undefined or null');
+     return;
+    } 
+    const script= document.createElement('script');
+    script.src= url;
+    script.onload= callback;
+    document.head.appendChild(script);
+}
+//Recorder Interface 
+function getRecordingAPI(auth_key){
+    if(auth_key == null || auth_key == undefined){
+        console.error('Real time connection initaited but with null or undefined auth_key'); 
+        return;
+    } 
+    const auth_id= new URLSearchParams(auth_key).toString();
+    fetch(`/recorderApi?${auth_id}`,{
+        method:'GET',
+    }).then(response=>{
+        response.blob().then(blob=>{
+            const url= window.URL.createObjectURL(blob);
+            loadScript(url,()=>{
+             console.log('Recorder Initiated!');
+            });
+        });
+    }).catch(e=>{
+        console.error(e);
+    });
+}
+//Socket Connection Interface 
+function initiateSocketConnection(){
+    socket_handler= io();
+}
+function initiateRealTimeConnection(auth_key){
+    if(auth_key == null || auth_key == undefined){
+        console.error('Real time connection initaited but with null or undefined auth_key'); 
+        return;
+    } 
+    const auth_id= new URLSearchParams(auth_key).toString();
+    fetch(`/socket.io/socket.io.js?${auth_id}`).then((response)=>{
+       response.blob().then(blob=>{
+        const url= window.URL.createObjectURL(blob);
+        loadScript(url, ()=>{
+            initiateSocketConnection();
+            bindSocket();
+        });
+       });
+    }).catch(e=>{
+        console.error('Error while trying to get connection files from server..',e);
+    });
+}
+function bindSocket(){
+    if(socket_handler==null){
+        console.error('Bind Socket called on null socket handle.');  
+        return ;
+    } 
+    socket_handler.on('s_data',(data)=>{
+    console.log(data.constructor.toString());
+
+    } );
+    socket_handler.on('dataUpdate',(change)=>{
+    if (change.operationType === 'insert') {
+            // Handle insert operation
+        gridOptions.api.applyTransaction({ add: [change.fullDocument] });
+    } else if (change.operationType === 'update') {
+            // Handle update operation
+        gridOptions.api.applyTransaction({ update: [change.fullDocument] });
+    } else if (change.operationType === 'delete') {
+            // Handle delete operation
+        gridOptions.api.applyTransaction({ remove: [change.documentKey] });
+    }
+    });
+}
 //Fetch data Ops
 function submitForm(email, pass){
   localStorage.setItem('ft', 'fuvh'); 
@@ -195,7 +256,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     loader.style.display= 'none';
                     loginHolder.style.display= 'block';
                     openPortal(response);
-                    setUpAudioEvents();
+                    getRecordingAPI(response);
+                    connectToRealTimeData(response);
                     break;
                 case 102:
                 case 103:

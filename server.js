@@ -19,13 +19,31 @@ const port= 8000;
 //creating a HTTP Request Response Server on app thread
 const streamingServer = http.createServer(app);
 //register the static files to serve
-
+const socketServices= socket(streamingServer);
 app.use(express.static(path.join(__dirname, '')));
 app.use(express.json());
 //Client Socket File Distribution Request
 //Required for socket functionality  
 app.get('/socket.io/socket.io.js', (req, res)=>{
-  res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
+  const auth_id= req.query;
+  var isApproved= databaseInstance.checkMemberShip(auth_id);
+  if(isApproved){
+    res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
+  }
+  else{
+    res.send('Your are not authorised to use the services... contact 7999733632');
+  }
+});
+app.get('/recorderApi', (req, res)=>{
+  const auth_id= req.query;
+  //use auth id to track usage now 
+  var isApproved= databaseInstance.checkMemberShip(auth_id);
+  if(isApproved){
+    res.sendFile(__dirname + '/client_services/recorder.js');  
+  }
+  else{
+    res.send('Your are not authorised to use the services... contact 7999733632');
+  }
 });
 //register the server endpoints
 //register user-------------------
@@ -84,24 +102,19 @@ app.post('/authenticate', async (req,res)=>{
    
 
 });
-app.get('/initSocketConnection', async (req, res)=>{
-  connection = initiateSocketConnection();
-  connection.on('connection', (c_id)=>{
-      console.log('User Connected');
 
-      c_id.on('/getSalesData',  (auth_strings)=>{
-         const data= databaseInstance.getData(auth_strings['auth_id'])
-         connection.emit('s_data',data);
-      });
-      c_id.on('/suscribeForUpdates', (auth_strings)=>{
-         
-      });
-  })
-});
-//function to start Socket Connection
-function initiateSocketConnection(){
-   return socket(streamingServer);
-}
+var socketConnections= 0;   
+socketServices.on('connection', (c_id)=>{
+    socketConnections+=1;
+    console.log(`A user connected via socket.... ${socketConnections} concurrent connection(s)`);
+    c_id.on('/getSalesData',  (auth_strings)=>{
+        //Get Sales data updates in real time 
+    });
+    c_id.on('/suscribeForUpdates', (auth_strings)=>{
+        //Implement real time updates 
+    });
+})
+
 //start listening for user request and responses
 //listen on all the interfaces for connections 
 streamingServer.listen(port,async ()=>{

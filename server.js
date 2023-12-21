@@ -22,6 +22,11 @@ const streamingServer = http.createServer(app);
 
 app.use(express.static(path.join(__dirname, '')));
 app.use(express.json());
+//Client Socket File Distribution Request
+//Required for socket functionality  
+app.get('/socket.io/socket.io.js', (req, res)=>{
+  res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
+});
 //register the server endpoints
 //register user-------------------
 app.post('/register',async (req,res)=>{
@@ -68,11 +73,7 @@ app.get('/getDataStream', async (req,res)=>{
 app.post('/authenticate', async (req,res)=>{
    const auth_data= req.body;
    console.log('Auth Request ');
-   //getToken
-   //const auth_token= tokenGenerator.getToken(auth_data);
-   //console.log(auth_token)   
-//check User Registered or not
-   //console.log(auth_data);
+   
    var result= await databaseInstance.checkRegistration(auth_data);
    if(result.isRegistered){
     console.log(result.auth_id);

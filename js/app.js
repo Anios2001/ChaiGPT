@@ -1,5 +1,9 @@
+//Required to include the recorder api in html script tag
 
 //const socket_handler;
+
+var keyPressed= false;
+var isrecording= false;
 const columnDefination= [
     {field:"vendor_name"},
     {field:"rate_per_kg"},
@@ -12,6 +16,7 @@ const columnDefination= [
 console.log(localStorage.getItem('ft'));
 var gridHolder=null;
 var loader= null;
+
 const gridOptions= {
     columnDefs: columnDefination,
     defaultColDef:{sortable: true, filter: true, editable:true},
@@ -22,7 +27,7 @@ const showTableData = function (data){
     new agGrid.Grid(gridHolder,gridOptions);
     else 
     console.error('Grid Reference Error');
-    gridOptions.api.setRowData(data);   
+     
 };
 
 //Data Operations start here 
@@ -70,22 +75,22 @@ const authenticate = function (data){
         localStorage.setItem('error',e);
     });
 };
-//socket_handler.on('s_data',(data)=>{
-//    console.log(data.constructor.toString());
-//
-//} );
-//socket_handler.on('dataUpdate',(change)=>{
-//    if (change.operationType === 'insert') {
+socket_handler.on('s_data',(data)=>{
+   console.log(data.constructor.toString());
+
+} );
+socket_handler.on('dataUpdate',(change)=>{
+   if (change.operationType === 'insert') {
         // Handle insert operation
-//        gridOptions.api.applyTransaction({ add: [change.fullDocument] });
-//    } else if (change.operationType === 'update') {
+       gridOptions.api.applyTransaction({ add: [change.fullDocument] });
+   } else if (change.operationType === 'update') {
         // Handle update operation
-//        gridOptions.api.applyTransaction({ update: [change.fullDocument] });
-//    } else if (change.operationType === 'delete') {
+       gridOptions.api.applyTransaction({ update: [change.fullDocument] });
+   } else if (change.operationType === 'delete') {
         // Handle delete operation
-//        gridOptions.api.applyTransaction({ remove: [change.documentKey] });
-//    }
-//});
+       gridOptions.api.applyTransaction({ remove: [change.documentKey] });
+   }
+});
 //Fetch data Ops
 function submitForm(email, pass){
   localStorage.setItem('ft', 'fuvh'); 
@@ -106,6 +111,27 @@ function openPortal(passableData){
     const portal = document.getElementById('scrollable_view');
     portal.style.display= 'block';
 }
+function setUpAudioEvents(){
+    
+    document.addEventListener('keydown', keyDownEvent);
+    document.addEventListener('keyup', keyUpEvent);
+}
+function keyDownEvent(event){
+    if((event.key=='Q' || event.key=='q') && !keyPressed && !isrecording)
+     {
+       keyPressed= true;  
+       isrecording= true;
+       Recorder.startRecording();  
+     }   
+}
+function keyUpEvent(event){
+    if((event.key=='Q' || event.key=='q') && keyPressed && isrecording){
+        keyPressed= false;
+        Recorder.stopRecording();
+        isrecording= false;  
+    }
+}
+
 function showErrorPopup(errorMessage) {
     var errorPopup = document.getElementById('errorPopup');
     const error_holder= document.querySelector('#errorPopup > p');
@@ -141,8 +167,9 @@ const startFetchingData= (url)=>fetch('/getData').then((response)=>{
     console.error("CLIENT END:: Server Data Fetch failed", error);
 }); 
 document.addEventListener('DOMContentLoaded', ()=>{
-    // gridHolder= document.getElementById('scrollable_view');
+     gridHolder= document.getElementById('scrollable_view');
     //startFetchingData();
+    new agGrid.Grid(gridHolder,gridOptions);
     loader = document.getElementsByClassName('loader').item(0);
     const loginHolder= document.getElementById('login_form');
     loader.style.display= 'none';//enable by block
@@ -168,6 +195,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     loader.style.display= 'none';
                     loginHolder.style.display= 'block';
                     openPortal(response);
+                    setUpAudioEvents();
                     break;
                 case 102:
                 case 103:

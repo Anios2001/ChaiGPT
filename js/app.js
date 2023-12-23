@@ -34,23 +34,24 @@ const showTableData = function (data){
 //Register Interface ..
 const register= function (user_data)
 {
-console.log(JSON.stringify(user_data));
-return fetch('/register',{
-    method:'POST',
-    headers:{
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(user_data),
-}).then((response)=>{
-   if(response.ok)
-    return response.json();
-   throw new Error('Network Response is not ok');
-}).then((data)=>{
-    if(data && data['msg'])
-     console.log(data['msg']);
-    else
-     console.log(data['auth_id']);
-});};
+    console.log(JSON.stringify(user_data));
+    return fetch('/register',{
+        method:'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user_data),
+    }).then((response)=>{
+    if(response.ok)
+        return response.json();
+    throw new Error('Network Response is not ok');
+    }).then((data)=>{
+        if(data && data['msg'])
+        console.log(data['msg']);
+        else
+        console.log(data['auth_id']);
+    });
+};
 //Authentication Interface .....
 const authenticate = function (data){
     
@@ -247,7 +248,7 @@ const startFetchingData= (url)=>fetch('/getData').then((response)=>{
     console.error("CLIENT END:: Server Data Fetch failed", error);
 }); 
 document.addEventListener('DOMContentLoaded', ()=>{
-     gridHolder= document.getElementById('scrollable_view');
+    gridHolder= document.getElementById('scrollable_view');
     //startFetchingData();
     new agGrid.Grid(gridHolder,gridOptions);
     loader = document.getElementsByClassName('loader').item(0);

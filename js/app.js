@@ -54,7 +54,7 @@ const register= function (user_data)
 };
 //Authentication Interface .....
 const authenticate = function (data){
-    
+  console.group("Client Auth Interface");
   return fetch("/authenticate", 
     {
     method:"POST",
@@ -69,6 +69,7 @@ const authenticate = function (data){
         throw new Error('Network Response is not ok');
     }).then((data)=>{
         console.log(data);
+        console.groupEnd("Client Auth Interface");
         if(data && data['auth_id']=='')
         return '';
         else
@@ -153,6 +154,10 @@ function bindSocket(){
     }
     });
 }
+function connectToRealTimeData(auth_key){
+    //Not Implemented
+    console.log("Not Implemented yet");
+}
 function transferMultiPartData(data){
    var formdata=  new FormData();
    formdata.append('audio',data, 'user_audio.mp3');
@@ -161,8 +166,10 @@ function transferMultiPartData(data){
     body: formdata
    }).then(response=>{
          console.log(response);
+         console.groupEnd("Audio Transfer Process");
    }).catch(e=>{
          console.error(e);
+         console.groupEnd("Audio Transfer Process");
    });
 }
 //Fetch data Ops
@@ -195,6 +202,7 @@ function keyDownEvent(event){
      {
        keyPressed= true;  
        isrecording= true;
+       console.group("RECORDING_API");
        Recorder.startRecording();  
      }   
 }
@@ -202,13 +210,18 @@ function keyUpEvent(event){
     if((event.key=='Q' || event.key=='q') && keyPressed && isrecording){
         keyPressed= false;
         Recorder.stopRecording().then((audioBlob)=>{
-            if(audioBlob == null || audioBlob == undefined)
+            if(audioBlob == null || audioBlob == undefined){
              console.error('Error while recording the audio...');
+             console.groupEnd("RECORDING_API");
+            }
             else{
              //Send the blob as a multipart Form Data to the server for processing
+             console.groupEnd("RECORDING_API");
+             console.group("Audio Transfer Process");
              transferMultiPartData(audioBlob);
             } 
         });
+        
         isrecording= false;  
     }
 }
@@ -231,6 +244,7 @@ function showError(errorString){
     showErrorPopup(errorString);
     console.error(errorString);
 }
+//Not using now
 const startFetchingData= (url)=>fetch('/getData').then((response)=>{
     if(response.ok){
       return response.json();
@@ -247,6 +261,7 @@ const startFetchingData= (url)=>fetch('/getData').then((response)=>{
 }).catch((error)=>{
     console.error("CLIENT END:: Server Data Fetch failed", error);
 }); 
+//On document load
 document.addEventListener('DOMContentLoaded', ()=>{
     gridHolder= document.getElementById('scrollable_view');
     //startFetchingData();
@@ -276,8 +291,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     loader.style.display= 'none';
                     loginHolder.style.display= 'block';
                     openPortal(response);
+                    console.group("Recording API Loading Process");
                     getRecordingAPI(response);
+                    console.groupEnd("Recording API Loading Process");
+                    console.group("Socket Service Loading Process");
                     connectToRealTimeData(response);
+                    console.groupEnd("Socket Service Loading Process");
                     break;
                 case 102:
                 case 103:

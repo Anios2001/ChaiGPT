@@ -40,11 +40,18 @@ app.get('/socket.io/socket.io.js', (req, res)=>{
 app.get('/recorderApi', (req, res)=>{
   const auth_id= req.query;
   //use auth id to track usage now 
+  console.group("Serving Recorder API");
   var isApproved= databaseInstance.checkMemberShip(auth_id);
   if(isApproved){
-    res.sendFile(__dirname + '/client_services/recorder.js');  
+    console.log(`Auth id approved :${auth_id}:`);
+    res.sendFile(__dirname + '/client_services/recorder.js',(result)=>{
+      console.log(result.message);
+      console.groupEnd("Serving Recorder API");
+    });  
   }
   else{
+    console.log(`The auth id is not approved :${auth_id}:`);
+    console.groupEnd("Serving Recorder API");
     res.send('Your are not authorised to use the services... contact 7999733632');
   }
 });
@@ -53,6 +60,7 @@ app.get('/recorderApi', (req, res)=>{
 app.post('/register',async (req,res)=>{
   
   const user_data= req.body;
+  console.group("Serving Register request");
   console.log('Recived Request ',user_data);
  if(user_data!== undefined)
  {
@@ -60,6 +68,7 @@ app.post('/register',async (req,res)=>{
   const token= tokenGenerator.getToken({email:json.email,password:json.password});
   var data_to_server= user_data;
   data_to_server.token= token;
+  try{
     if (databaseInstance) {
       var code = await databaseInstance.insertNewRecord(data_to_server);
       switch(code){
@@ -72,17 +81,27 @@ app.post('/register',async (req,res)=>{
         default:
           res.send({msg:'Data Authenticity violated....'});
         }    
+      console.groupEnd("Serving Register request");  
     }
     else{
+      console.log("Data base instance null");
       res.send({msg:'Server error :: database object is null or not instantiated... '});
+      console.groupEnd("Server Register request");
     }
+  }
+  catch(e){
+    console.log("Error while inserting new record");
+    console.groupEnd("Server Register request");
+  } 
  }
  else{
      res.send({msg:'Server recived an empty string'});
+     console.groupEnd("Server Register request");
  }  
 });
 //get the Audio File for processing 
 app.post('/processAudioCommand',multer.single('audio'), async (req, res)=>{
+  console.group("Serving Audio Command Request");
   const audioBuffer =  req.file.buffer;
   const base64buffer = audioBuffer.toString('base64');
   //send for google speech recog
@@ -90,6 +109,7 @@ app.post('/processAudioCommand',multer.single('audio'), async (req, res)=>{
   //answer to my own GPT command 
   const generation = await getGeneration(text);
   res.json(JSON.parse(generation));
+  console.groupEnd("Serving Audio Command Request");
 });
 //2 getDataStream ---------
 app.get('/getDataStream', async (req,res)=>{
@@ -103,6 +123,7 @@ app.get('/getDataStream', async (req,res)=>{
 //3 authenticate user using email and password
 app.post('/authenticate', async (req,res)=>{
    const auth_data= req.body;
+   console.group("Serving Authenticate Request");
    console.log('Auth Request ');
    
    var result= await databaseInstance.checkRegistration(auth_data);
@@ -112,7 +133,7 @@ app.post('/authenticate', async (req,res)=>{
    }
    else
     res.json({auth_id:'',is_authenticated:false});
-   
+   console.groupEnd("Serving Authenticate Request");
 
 });
 

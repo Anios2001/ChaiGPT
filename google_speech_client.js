@@ -24,3 +24,4 @@ async function serveRequest(audioBuffer){
     return transcription;   
 
 }
+module.exports= [serveRequest];

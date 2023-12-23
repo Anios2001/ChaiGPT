@@ -12,6 +12,8 @@ const socket= require('socket.io');
 const tokenGenerator= require('./token_files/getToken');
 // Database Library 
 const MongoDatabase= require('./database_files/mongodatabase');
+const {serveRequest} = require('./google_speech_client');
+const {getGeneration} = require('./generationFiles/textGeneration');
 const multer= require('multer');
 var databaseInstance;
 //Server Configuration Code 
@@ -80,11 +82,14 @@ app.post('/register',async (req,res)=>{
  }  
 });
 //get the Audio File for processing 
-app.post('/processAudioCommand',multer.single('audio'),(req, res)=>{
+app.post('/processAudioCommand',multer.single('audio'), async (req, res)=>{
   const audioBuffer =  req.file.buffer;
   const base64buffer = audioBuffer.toString('base64');
   //send for google speech recog
+  const text = await serveRequest(base64buffer);
   //answer to my own GPT command 
+  const generation = await getGeneration(text);
+  res.json(JSON.parse(generation));
 });
 //2 getDataStream ---------
 app.get('/getDataStream', async (req,res)=>{

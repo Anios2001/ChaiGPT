@@ -22,6 +22,4 @@ async function getGeneration(user_prompt_text){
       });
     return completion.choices[0].message.content;
 }
-getGeneration('Jay bhai se 300Rs mein 0.4 per kg ke hisab se mal mangvaya aur 20Rs ka discount bhi mila').then(response=>{
-    console.log(response);
-});
+module.exports= [getGeneration];

@@ -159,9 +159,9 @@ function transferMultiPartData(data){
     method: 'POST',
     body: formdata
    }).then(response=>{
-
+         console.log(response);
    }).catch(e=>{
-    
+         console.error(e);
    });
 }
 //Fetch data Ops
@@ -205,7 +205,7 @@ function keyUpEvent(event){
              console.error('Error while recording the audio...');
             else{
              //Send the blob as a multipart Form Data to the server for processing
-
+             transferMultiPartData(audioBlob);
             } 
         });
         isrecording= false;  

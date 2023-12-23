@@ -7,7 +7,7 @@ body, html{
 .scrollable_view{
     height: 720px;
     width: 1080px;
-    display: block;
+    display: none;
 }
 .main_content{
     display: flex;
@@ -227,6 +227,4 @@ ul{
   }
 
 /* Experimental & Debuging  */
-#login_page{
-  display: none;
-}
+

@@ -87,6 +87,7 @@ function loadScript(url, callback){
     } 
     const script= document.createElement('script');
     script.src= url;
+    script.type='text/javascript';
     script.onload= callback;
     document.head.appendChild(script);
 }
@@ -263,9 +264,9 @@ const startFetchingData= (url)=>fetch('/getData').then((response)=>{
 }); 
 //On document load
 document.addEventListener('DOMContentLoaded', ()=>{
-    gridHolder= document.getElementById('scrollable_view');
+    //gridHolder= document.getElementById('scrollable_view');
     //startFetchingData();
-    new agGrid.Grid(gridHolder,gridOptions);
+    //new agGrid.Grid(gridHolder,gridOptions);
     loader = document.getElementsByClassName('loader').item(0);
     const loginHolder= document.getElementById('login_form');
     loader.style.display= 'none';//enable by block
@@ -294,6 +295,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     console.group("Recording API Loading Process");
                     getRecordingAPI(response);
                     console.groupEnd("Recording API Loading Process");
+                    setUpAudioEvents();
                     console.group("Socket Service Loading Process");
                     connectToRealTimeData(response);
                     console.groupEnd("Socket Service Loading Process");

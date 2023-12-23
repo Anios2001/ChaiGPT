@@ -6,6 +6,9 @@
 const express= require('express');
 const path= require('path');
 const http= require('http');
+const fs= require('fs');
+const util= require('util');
+const readFileAsync= util.promisify(fs.readFile);
 //Socket Connection Requirement
 const socket= require('socket.io');
 //Token Server Requirement
@@ -15,6 +18,7 @@ const MongoDatabase= require('./database_files/mongodatabase');
 const {serveRequest} = require('./google_speech_client');
 const {getGeneration} = require('./generationFiles/textGeneration');
 const multer= require('multer');
+const uploader= multer({dest: 'audio_files/'});
 var databaseInstance;
 //Server Configuration Code 
 const app = express();
@@ -45,7 +49,7 @@ app.get('/recorderApi', (req, res)=>{
   if(isApproved){
     console.log(`Auth id approved :${auth_id}:`);
     res.sendFile(__dirname + '/client_services/recorder.js',(result)=>{
-      console.log(result.message);
+      
       console.groupEnd("Serving Recorder API");
     });  
   }
@@ -100,16 +104,35 @@ app.post('/register',async (req,res)=>{
  }  
 });
 //get the Audio File for processing 
-app.post('/processAudioCommand',multer.single('audio'), async (req, res)=>{
+app.post('/processAudioCommand',uploader.single('audio'), async (req, res)=>{
   console.group("Serving Audio Command Request");
-  const audioBuffer =  req.file.buffer;
-  const base64buffer = audioBuffer.toString('base64');
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  console.log(req.file);
+  const audioFile= req.file;
+  try{
+  fs.writeFile(`audio_files/${req.file.filename}.mp3`,req.file.buffer,(writeErr)=>{
+      if(writeErr)
+       console.error('Unable to save file');
+      else{
+        
+      }
+
+  });
+  const base64buffer= buffer.toString('base64');
   //send for google speech recog
   const text = await serveRequest(base64buffer);
   //answer to my own GPT command 
   const generation = await getGeneration(text);
   res.json(JSON.parse(generation));
+ 
+  }
+  catch(e){
+    console.error(e);
+  }
   console.groupEnd("Serving Audio Command Request");
+  
 });
 //2 getDataStream ---------
 app.get('/getDataStream', async (req,res)=>{

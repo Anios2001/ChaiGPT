@@ -236,7 +236,10 @@ function showErrorPopup(errorMessage) {
       hideErrorPopup(); // Hide the popup after 3 seconds (adjust as needed)
     }, 3000); // 3000 milliseconds = 3 seconds
 }
-  
+function hidePopup(){
+    var popup= document.getElementById('pop-up');
+    popup.style.display='none';
+}  
 function hideErrorPopup() {
     var errorPopup = document.getElementById('errorPopup');
     errorPopup.classList.remove('show'); // Remove the 'show' class to hide the popup

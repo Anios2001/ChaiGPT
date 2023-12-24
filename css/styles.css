@@ -7,7 +7,7 @@ body, html{
 .scrollable_view{
     height: 720px;
     width: 1080px;
-    display: none;
+    display: block;
 }
 .main_content{
     display: flex;
@@ -207,6 +207,7 @@ ul{
     background-color: #ff6347; /* Red color for error */
     color: white;
     padding: 5px;
+    box-shadow: 0px 0px 3px rgb(13, 112, 53);
     transition: top 0.5s ease-out; /* Add a smooth transition effect */
     z-index: 999; /* Ensure it's on top of other elements */
   }
@@ -217,14 +218,90 @@ ul{
   .error-popup > p{
     color: white;
   }
-  
+  .pop-up-bar{
+    background-color: rgb(255, 252, 252);
+    width: 70%;
+    height: 25%;
+    z-index: 999;
+    border-radius: 10px;
+    position: fixed;
+    box-shadow: 0px 0px 6px rgb(8, 48, 24);
+    padding: 10px;
+    
+  }
+  #pop-up{
+    top: 25%;
+    left: 25%;
+    /* Children Properties */
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
   .close-btn {
     position: absolute;
     top: 5px;
     right: 10px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 25px;
   }
+ .title{
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: large;
+ }
+ .value{
+    font-family: 'Russo One', sans-serif;
 
+    font-size: large;
+ }
 /* Experimental & Debuging  */
-
+#login_page{
+    display: none;
+}
+.field{
+   margin: 5px;
+   border: 2px solid rgb(29, 29, 29);
+   border-radius: 5px; 
+   height: max-content;
+   padding: 5px;
+}
+.field:hover{
+   background-color: black;
+   color: white;
+}
+.pop-up-footer{
+   color: black;
+   font-family: 'Josefin Sans', sans-serif;
+   font-size: x-large;
+   margin: 2px;
+   width: 100%;
+}
+.btn_class{
+  padding: 2px;
+  border: 3px solid black;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size: large;
+  border-radius: 10px;
+  margin: 0 10px;
+  padding: 0 5px;
+}
+.white_btn_class_unselected{
+  background-color: white;
+  border-color: black; 
+  color: black;
+  
+}
+.white_btn_class_unselected:hover{
+  background-color: black;
+  color: white;
+}
+.white_btn_class_selected{
+  background-color: black;
+  color: white;  
+  border-color: black;
+}
+.white_btn_class_selected:hover{
+  background-color: white;
+  color: black;
+  border-color: black;  
+}

@@ -8,6 +8,7 @@ const path= require('path');
 const http= require('http');
 const fs= require('fs');
 const util= require('util');
+const writeFileAsync= util.promisify(fs.writeFile);
 const readFileAsync= util.promisify(fs.readFile);
 //Socket Connection Requirement
 const socket= require('socket.io');
@@ -15,7 +16,7 @@ const socket= require('socket.io');
 const tokenGenerator= require('./token_files/getToken');
 // Database Library 
 const MongoDatabase= require('./database_files/mongodatabase');
-const {serveRequest} = require('./google_speech_client');
+const {getAnswer} = require('./google_speech_client');
 const {getGeneration} = require('./generationFiles/textGeneration');
 const multer= require('multer');
 const uploader= multer({dest: 'audio_files/'});
@@ -112,21 +113,17 @@ app.post('/processAudioCommand',uploader.single('audio'), async (req, res)=>{
   console.log(req.file);
   const audioFile= req.file;
   try{
-  fs.writeFile(`audio_files/${req.file.filename}.mp3`,req.file.buffer,(writeErr)=>{
-      if(writeErr)
-       console.error('Unable to save file');
-      else{
-        
-      }
-
-  });
-  const base64buffer= buffer.toString('base64');
-  //send for google speech recog
-  const text = await serveRequest(base64buffer);
-  //answer to my own GPT command 
-  const generation = await getGeneration(text);
-  res.json(JSON.parse(generation));
  
+  const fileBuffer= await readFileAsync(audioFile.path);
+
+  await writeFileAsync(`audio_files//${audioFile.filename}.mp3`,fileBuffer);
+  fs.unlinkSync(audioFile.path);
+  // //send for google speech recog
+  const text = await getAnswer(`audio_files//${audioFile.filename}.mp3`);
+  // //answer to my own GPT command 
+  const generation = await getGeneration(text);
+  
+  res.json(JSON.parse(generation));
   }
   catch(e){
     console.error(e);

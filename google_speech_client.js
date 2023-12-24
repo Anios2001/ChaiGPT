@@ -27,17 +27,19 @@ async function serveRequest(audioBuffer){
     return transcription;   
 
 }
-async function getAnswer(){
+async function getAnswer(path){
 try{
-    const buffer= await readFileAsync('audio_files//ChaiB.mp3');
+    const buffer= await readFileAsync(path);
     const base64buffer= buffer.toString('base64');
     //send for google speech recog
     const text = await serveRequest(base64buffer);
     console.log(text);
+    return text;
 }
 catch(e){
     console.error(e);
+    return '';
 }    
 }
-getAnswer();
+module.exports= {getAnswer};
 

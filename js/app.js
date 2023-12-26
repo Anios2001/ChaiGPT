@@ -86,6 +86,10 @@ function hideListeningDialog(){
     const listningGif= document.getElementById('listening_gif');
     listningGif.style.display= 'none';
 }
+function showWaitingForServerDialog(){
+    const server_wait= document.getElementById('waiting_gif');
+    server_wait.style.display= 'flex';
+}
 //Script loader 
 function loadScript(url, callback){
     if(url == null || url== undefined){
@@ -168,12 +172,14 @@ function connectToRealTimeData(auth_key){
 }
 function transferMultiPartData(data){
    var formdata=  new FormData();
+   hideListeningDialog();
+   showWaitingForServerDialog();
    formdata.append('audio',data, 'user_audio.mp3');
    fetch('/processAudioCommand', {
     method: 'POST',
     body: formdata
    }).then(response=>{
-         console.log(response);
+         hideWaitingForServerDialog();
          console.groupEnd("Audio Transfer Process");
    }).catch(e=>{
          console.error(e);
@@ -230,7 +236,7 @@ function keyUpEvent(event){
              console.group("Audio Transfer Process");
              transferMultiPartData(audioBlob);
             } 
-            hideListeningDialog();
+            
         });
         
         isrecording= false;  

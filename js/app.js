@@ -1,3 +1,4 @@
+        
 //Required to include the recorder api in html script tag
 
 var socket_handler= null;
@@ -78,6 +79,28 @@ const authenticate = function (data){
         localStorage.setItem('error',e);
     });
 };
+function displayProcessedAnswer(SALE_DATA){
+   const displayPopup= document.getElementById('pop-up');
+    
+   const base_html= `
+   <section class="pop-up-footer">
+     Want to add the this data into the table ? Or Discard it ?
+   </section>
+   <button class="btn_class white_btn_class_unselected">
+     Add to the list
+   </button>
+   <button class="btn_class white_btn_class_selected">Abort</button>
+     `;
+    const htmlCode=``; 
+    for (let [key,value] of Object.entries(SALE_DATA)){
+      htmlCode += `<article class="field">
+                    <b class="title">${key}:</b>
+                    <b class="value">${value}</b>
+                   </article>`
+    }
+    htmlCode+= base_html;
+    displayPopup.insertAdjacentHTML('beforeend',htmlCode);
+}
 function showListeningDialog(){
     const listningGif= document.getElementById('listening_gif');
     listningGif.style.display= 'flex';
@@ -89,6 +112,10 @@ function hideListeningDialog(){
 function showWaitingForServerDialog(){
     const server_wait= document.getElementById('waiting_gif');
     server_wait.style.display= 'flex';
+}
+function hideWaitingForServerDialog(){
+    const server_wait= document.getElementById('waiting_gif');
+    server_wait.style.display='none';
 }
 //Script loader 
 function loadScript(url, callback){
@@ -179,6 +206,8 @@ function transferMultiPartData(data){
     method: 'POST',
     body: formdata
    }).then(response=>{
+         console.log(response);
+         displayProcessedAnswer(response);
          hideWaitingForServerDialog();
          console.groupEnd("Audio Transfer Process");
    }).catch(e=>{

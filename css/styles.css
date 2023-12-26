@@ -310,10 +310,14 @@ ul{
   width: 25%;
   position: relative;
   left: 35%;
-  display: 'none';
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 .listening_part > img{
   display: block;
+}
+/* Test */
+#listening_gif{
+  display: none;
 }

@@ -305,3 +305,15 @@ ul{
   color: black;
   border-color: black;  
 }
+.listening_part{
+  height: 100%;
+  width: 25%;
+  position: relative;
+  left: 35%;
+  display: 'none';
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.listening_part > img{
+  display: block;
+}

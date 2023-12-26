@@ -78,7 +78,14 @@ const authenticate = function (data){
         localStorage.setItem('error',e);
     });
 };
-
+function showListeningDialog(){
+    const listningGif= document.getElementById('listening_gif');
+    listningGif.style.display= 'flex';
+}
+function hideListeningDialog(){
+    const listningGif= document.getElementById('listening_gif');
+    listningGif.style.display= 'none';
+}
 //Script loader 
 function loadScript(url, callback){
     if(url == null || url== undefined){
@@ -204,6 +211,7 @@ function keyDownEvent(event){
        keyPressed= true;  
        isrecording= true;
        console.group("RECORDING_API");
+       showListeningDialog();
        Recorder.startRecording();  
      }   
 }
@@ -211,6 +219,7 @@ function keyUpEvent(event){
     if((event.key=='Q' || event.key=='q') && keyPressed && isrecording){
         keyPressed= false;
         Recorder.stopRecording().then((audioBlob)=>{
+            
             if(audioBlob == null || audioBlob == undefined){
              console.error('Error while recording the audio...');
              console.groupEnd("RECORDING_API");
@@ -221,6 +230,7 @@ function keyUpEvent(event){
              console.group("Audio Transfer Process");
              transferMultiPartData(audioBlob);
             } 
+            hideListeningDialog();
         });
         
         isrecording= false;  

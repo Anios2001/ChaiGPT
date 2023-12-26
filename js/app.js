@@ -99,9 +99,12 @@ function displayProcessedAnswer(SALE_DATA){
                    </article>`
     }
     htmlCode+= base_html;
+    hideWaitingForServerDialog();
     displayPopup.insertAdjacentHTML('beforeend',htmlCode);
 }
 function showListeningDialog(){
+    const popup_view= document.getElementById('pop-up');
+    popup_view.style.display= 'flex';
     const listningGif= document.getElementById('listening_gif');
     listningGif.style.display= 'flex';
 }
@@ -206,9 +209,14 @@ function transferMultiPartData(data){
     method: 'POST',
     body: formdata
    }).then(response=>{
+         const len= Object.keys(response).length;
          console.log(response);
-         displayProcessedAnswer(response);
-         hideWaitingForServerDialog();
+         if(len && len > 0){  
+          displayProcessedAnswer(response);
+         }
+         else{
+           console.print('result from server not properly formatted'); 
+         }
          console.groupEnd("Audio Transfer Process");
    }).catch(e=>{
          console.error(e);
@@ -345,7 +353,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     console.groupEnd("Recording API Loading Process");
                     setUpAudioEvents();
                     console.group("Socket Service Loading Process");
-                    connectToRealTimeData(response);
+                    // connectToRealTimeData(response);
                     console.groupEnd("Socket Service Loading Process");
                     break;
                 case 102:

@@ -7,7 +7,7 @@ body, html{
 .scrollable_view{
     height: 720px;
     width: 1080px;
-    display: block;
+    display: none;
 }
 .main_content{
     display: flex;
@@ -233,7 +233,8 @@ ul{
     top: 25%;
     left: 25%;
     /* Children Properties */
-    display: flex;
+    display: none; 
+    /* Should be flex to make it visible */
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
@@ -255,9 +256,7 @@ ul{
     font-size: large;
  }
 /* Experimental & Debuging  */
-#login_page{
-    display: none;
-}
+
 .field{
    margin: 5px;
    border: 2px solid rgb(29, 29, 29);
@@ -319,5 +318,8 @@ ul{
 }
 /* Test */
 #listening_gif{
+  display: none;
+}
+#waiting_gif{
   display: none;
 }

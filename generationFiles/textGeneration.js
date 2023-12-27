@@ -1,7 +1,7 @@
 
 var OpenAI= require('openai');
 const openai= new OpenAI({
-    apiKey: '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'
+    apiKey: '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'
 });
 const background= `Dialogue: 200 Rs me 2.5 per kg ke hissab se Raju bhai se mal mangvaya 100 Rs ka discount bhi mila
 What is the vendor_name, rate_per_kg, discount, weight and price of the good ?

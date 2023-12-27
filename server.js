@@ -1,12 +1,16 @@
 //need an node.js environment to run 
-// This is an application server for my node.js application 
+// This is an application server for node.js application 
 // database service loaded as a function library....
-
 //Request Response Channel Requirements
+//For Express MiddleWare and initiating the application environment
 const express= require('express');
+//for path.join(_dirname,'') All request must point to files in the directory 
 const path= require('path');
+// creating a server using http.createServer(<Application context>)
 const http= require('http');
+// file input and output operations using filesystem node.js library fd
 const fs= require('fs');
+//Converting the Promise Chaining to async/await type for better management of code 
 const util= require('util');
 const writeFileAsync= util.promisify(fs.writeFile);
 const readFileAsync= util.promisify(fs.readFile);
@@ -16,22 +20,32 @@ const socket= require('socket.io');
 const tokenGenerator= require('./token_files/getToken');
 // Database Library 
 const MongoDatabase= require('./database_files/mongodatabase');
+// Google Speech to Text
 const {getAnswer} = require('./google_speech_client');
+// GPT generation Library 
 const {getGeneration} = require('./generationFiles/textGeneration');
+// For transfering audio data using the http formData, audio is a multipart data
 const multer= require('multer');
+
+
+//-----------------------dependencies declaration ended------------------------------------------------------------------
+//Intializing multipart multer to save file at dest defined using a json
 const uploader= multer({dest: 'audio_files/'});
+//database Handler 
 var databaseInstance;
 //Server Configuration Code 
 const app = express();
 const port= 8000;
-//creating a HTTP Request Response Server on app thread
+//creating a HTTP Request Response Server on app thread/context
 const streamingServer = http.createServer(app);
-//register the static files to serve
+//converting the server into socket server by using socket constructor with server as attribute
 const socketServices= socket(streamingServer);
+//register the static files to serve using express middleware express.static
 app.use(express.static(path.join(__dirname, '')));
+// register json format to be used for incoming requests only not responses 
 app.use(express.json());
-//Client Socket File Distribution Request
-//Required for socket functionality  
+//Socket connector distribution code 
+//Required for socket functionality....
 app.get('/socket.io/socket.io.js', (req, res)=>{
   const auth_id= req.query;
   var isApproved= databaseInstance.checkMemberShip(auth_id);
@@ -42,6 +56,7 @@ app.get('/socket.io/socket.io.js', (req, res)=>{
     res.send('Your are not authorised to use the services... contact 7999733632');
   }
 });
+//Recorder Api distribution code 
 app.get('/recorderApi', (req, res)=>{
   const auth_id= req.query;
   //use auth id to track usage now 
@@ -60,8 +75,8 @@ app.get('/recorderApi', (req, res)=>{
     res.send('Your are not authorised to use the services... contact 7999733632');
   }
 });
-//register the server endpoints
-//register user-------------------
+//Open server endpoints...
+// 1 register user-------------------
 app.post('/register',async (req,res)=>{
   
   const user_data= req.body;
@@ -104,7 +119,7 @@ app.post('/register',async (req,res)=>{
      console.groupEnd("Server Register request");
  }  
 });
-//get the Audio File for processing 
+// 2 get the Audio File for processing 
 app.post('/processAudioCommand',uploader.single('audio'), async (req, res)=>{
   console.group("Serving Audio Command Request");
   if (!req.file) {
@@ -122,8 +137,9 @@ app.post('/processAudioCommand',uploader.single('audio'), async (req, res)=>{
   const text = await getAnswer(`audio_files//${audioFile.filename}.mp3`);
   // //answer to my own GPT command 
   const generation = await getGeneration(text);
-  
-  res.json(JSON.parse(generation));
+  const generationJSON= JSON.parse(generation);
+  console.log(generationJSON);
+  res.json(generationJSON);
   }
   catch(e){
     console.error(e);
@@ -131,7 +147,7 @@ app.post('/processAudioCommand',uploader.single('audio'), async (req, res)=>{
   console.groupEnd("Serving Audio Command Request");
   
 });
-//2 getDataStream ---------
+// getDataStream ---------
 app.get('/getDataStream', async (req,res)=>{
 //  dataLoader.getChangeStreams().then((result)=>{
 //     const connectionSocket= initiateSocketConnection();
@@ -156,7 +172,7 @@ app.post('/authenticate', async (req,res)=>{
    console.groupEnd("Serving Authenticate Request");
 
 });
-
+//Socket connection handlers registration.....
 var socketConnections= 0;   
 socketServices.on('connection', (c_id)=>{
     socketConnections+=1;
@@ -168,7 +184,7 @@ socketServices.on('connection', (c_id)=>{
         //Implement real time updates 
     });
 })
-
+//Start the server on port specified above....
 //start listening for user request and responses
 //listen on all the interfaces for connections 
 streamingServer.listen(port,async ()=>{

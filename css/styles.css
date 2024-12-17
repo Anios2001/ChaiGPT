@@ -2,6 +2,12 @@ body, html{
     height: 100%;
     margin: 0%;
     font: 400 18px 'Roboto', sans-serif;
+    --ag-grid-size: 7px;
+    
+    --ag-header-background-color:seagreen;
+    --ag-font-size: 21px;
+    
+    --ag-row-hover-color:#D2B48C;
 }
 
 .scrollable_view{
@@ -9,18 +15,23 @@ body, html{
     width: 1080px;
     display: none;
 }
+
 .main_content{
     display: flex;
     background-color: #efeff3;
     height: 100vh;
+    width: 100vw;
+    max-width: 100%;
 }
 .side_panel{
     background-color: rgb(13, 112, 53);
     color: beige;
-         
+    width: 18%;
 }
 .data_panel{
-    flex: 1;
+    /* flex: 1; */
+    width:82%;
+
     background-image: url('../images/leafbackground2-small.jpg');
 }
 ul{
@@ -38,8 +49,12 @@ ul{
 .floating_view{
     position: fixed;
     bottom: 0px;
+    width: 80%;
     background-color: rgb(4, 49, 22);
-    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
     padding: 20px;
     animation: bottomBarAnimation 1.0s;
 }
@@ -55,7 +70,30 @@ ul{
       transform: rotate(360deg);
     }
   }
+.aggregation_pill{
+  height: 3rem;
+  width: 12rem;
+  border-radius: 10px;
+  border: solid black;
+  background-color: #714433;
+  text-align: center;
+  color:antiquewhite;
+  padding-top: 5px;
 
+}
+#stats_view{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.smallHeading{
+  display: block;
+  font-size: medium;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  margin-bottom: 2px;
+}
 #mic_button_pill{
     height: 3rem;
     width: 12rem;
@@ -68,6 +106,7 @@ ul{
     flex-direction: row;
     cursor: pointer;
     align-items: center;
+    
 }
 
 #mic_button_pill:hover{
@@ -116,6 +155,7 @@ ul{
     position: relative;
     left: 25%;
     top: 50px;
+    
 }
 .login-container{
     width: 25%;
@@ -124,9 +164,15 @@ ul{
     left: 35%;
     top: 75px;
 }
+
+form:valid button{
+  opacity: 0.3;
+  pointer-events: none;
+}
+input:required{
+  border-color: rgb(183, 182, 182);
+}
 .container_base{
-    
-    
     background-color: white;
     padding: 10px;
     border: 2px solid gray;
@@ -139,7 +185,7 @@ ul{
 }
 .heading_style{
     margin: 10px;
-    color: rgb(13, 112, 53);
+    
     font: 700 40px 'Hevelitica', sans-serif ;
 }
 .text_field_style{
@@ -196,9 +242,7 @@ ul{
     display: flex;
     flex-direction: column;
 }
-#register_page{
-    display: none;
-}
+
 .error-popup {
     position: fixed;
     top: -100px; /* Start above the viewport */
@@ -211,7 +255,53 @@ ul{
     transition: top 0.5s ease-out; /* Add a smooth transition effect */
     z-index: 999; /* Ensure it's on top of other elements */
   }
+  /* .ag-theme-alpine{
+    --ag-grid-size: 7px;
+    --ag-header-foreground-color:white;
+    --ag-header-background-color:seagreen;
+    --ag-font-size: 21px;
+    --ag-row-hover-color:#D2B48C;
+  } */
+  .deleteBtn{
+    color: #eee;
+    padding: 7px 13px;
+    border: none;
+    border-radius: 1px;
+    background: #2c3e50;
+    margin-top: 5px;
+  }
+  .deleteBtn:hover{
+    background: #c0392b;
+  }
+  .deleteBtn:active{
+    background: #e74c3c;
+  }
   
+  .container{
+    
+    box-shadow: 1px 1px 1px black; 
+  }
+  .success-popup{
+    position: fixed;
+    top: -100px; /* Start above the viewport */
+    left: 0;
+    right: 0;
+    background-color: #70d60a; /* Red color for error */
+    color: white;
+    padding: 5px;
+    box-shadow: 0px 0px 3px rgb(13, 112, 53);
+    transition: top 0.5s ease-out; /* Add a smooth transition effect */
+    z-index: 999; /* Ensure it's on top of other elements */
+  }
+  .hidden{
+    display: none;
+  }
+  .success-popup.show{
+    top:0;
+  }
+  .success-popup > p{
+    color: white;
+  }
   .error-popup.show {
     top: 0; /* Show the popup by moving it down */
   }
@@ -299,6 +389,12 @@ ul{
   color: white;  
   border-color: black;
 }
+.whiteText{
+  color:white,
+}
+.greenText{
+  color: rgb(13, 112, 53),
+}
 .white_btn_class_selected:hover{
   background-color: white;
   color: black;
@@ -321,5 +417,8 @@ ul{
   display: none;
 }
 #waiting_gif{
+  display: none;
+}
+#register_page{
   display: none;
 }

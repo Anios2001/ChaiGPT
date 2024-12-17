@@ -41,5 +41,7 @@ catch(e){
     return '';
 }    
 }
+// const text = getAnswer(`audio_files//4a3fc94ff6fabb1510d8fde4df047813.mp3`);
+// text.then((value)=>console.log(value),(reason)=>console.log(reason));
 module.exports= {getAnswer};
 

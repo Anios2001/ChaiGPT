@@ -3,16 +3,12 @@
     <title>Sales Bot Application</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, height=device-height" />
-    <link rel="stylesheet" href="css/styles.css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 
     <!-- <script type="text/javascript" src="js/script.js"></script> -->
     <!-- Start importing the CSS styles own and AG Grids in order of AGGrid -- > styles.css -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"
-    />
+
     <!-- Include the theme CSS, only need to import the theme you are going to use -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,15 +16,21 @@
       href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Josefin+Sans:ital,wght@0,400;1,400;1,500&family=Russo+One&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <main class="main_content">
       <section class="side_panel">
         <ul>
-          <li class="side_panel_tab">Home</li>
-          <li class="side_panel_tab">About</li>
-          <li class="side_panel_tab">Events</li>
-          <li class="side_panel_tab">Table</li>
+          <li><h1 class="heading_style whiteText">ChaiGPT</h1></li>
+          <li id="homeHamBurger" class="side_panel_tab hidden">Home</li>
+          <li id="eventHamBurger" class="side_panel_tab hidden">Events</li>
+          <li id="tableHamBurger" class="side_panel_tab hidden">Table</li>
+          <li id="tryNowHamBurger" class="side_panel_tab">Try First</li>
+          <li id="registerHamBurger" class="side_panel_tab">Register</li>
+          <li id="aboutHamBurger" class="side_panel_tab">About</li>
+          <li id="loginHamBurger" class="side_panel_tab hidden">Login</li>
+          <li id="logoutHamBurger" class="side_panel_tab hidden">Logout</li>
         </ul>
       </section>
       <section class="data_panel">
@@ -36,15 +38,25 @@
           <span class="close-btn" onclick="hideErrorPopup()">&times;</span>
           <p>Error: Something went wrong!</p>
         </div>
-        <div id="register_page" class="fixed_page">
+        <div id="successPopup" class="success-popup">
+          <span class="close-btn" onclick="hideErrorPopup()">&times;</span>
+          <p>Operation Successfull</p>
+        </div>
+        <div id="register_page">
           <h1 class="heading_style">Register</h1>
-          <form class="container_base" method="post">
+          <div id="registerLoad" class="loader"></div>
+          <form
+            id="register_form"
+            class="container_base register-container"
+            novalidate
+          >
             <input
               class="text_field_style"
               type="email"
               name="r_user_email"
               id="r_email_box"
               placeholder="Email"
+              required
             />
             <input
               class="text_field_style"
@@ -52,6 +64,7 @@
               name="r_user_password"
               id="r_password_box"
               placeholder="Password"
+              required
             />
 
             <input
@@ -60,6 +73,7 @@
               name="user_name"
               id="u_name"
               placeholder="Name"
+              required
             />
 
             <input
@@ -68,6 +82,7 @@
               name="user_phone"
               id="u_phone"
               placeholder="Phone"
+              required
             />
 
             <input
@@ -76,18 +91,19 @@
               name="user_address"
               id="u_address"
               placeholder="Address"
+              required
             />
 
-            <input class="register-btn" type="button" value="Register" />
+            <input class="register-btn" type="submit" value="Register" />
           </form>
         </div>
-        <div id="login_page" class="fixed_page">
-          <h1 class="heading_style">Login</h1>
+        <div id="login_page">
+          <h1 class="greenText heading_style">Login</h1>
           <p class="para-txt">
             Welcome to your account management system.....<br />Enter your email
             and password to enter....
           </p>
-          <div class="loader"></div>
+          <div id="loginLoad" class="loader"></div>
           <form id="login_form" class="container_base login-container">
             <input
               class="text_field_style"
@@ -110,7 +126,7 @@
             />
           </form>
         </div>
-        <div id="scrollable_view" class="ag-theme-alpine">
+        <div id="scrollable_view">
           <div id="pop-up" class="pop-up-bar">
             <span class="close-btn" onclick="hidePopup()">&times;</span>
             <article id="listening_gif" class="listening_part">
@@ -130,6 +146,7 @@
               <div class="title">Processing the statement...</div>
             </article>
           </div>
+          <div id="table_view"></div>
         </div>
 
         <div class="floating_view">
@@ -143,12 +160,26 @@
             </svg>
             Listen to you
           </button>
+          <div id="stats_view">
+            <div id="totalRevenue" class="aggregation_pill">
+              <div class="smallHeading">Total Revenue</div>
+              <div id="totalRevenueText">----</div>
+            </div>
+            <div id="dayRevenue" class="aggregation_pill">
+              <div class="smallHeading">Today's Colletion</div>
+              <div id="dayRevenueText">-----</div>
+            </div>
+            <div id="avgDiscountPercent" class="aggregation_pill">
+              <div class="smallHeading">Avg. Discount Given</div>
+              <div id="avgDiscountText">-----</div>
+            </div>
+          </div>
         </div>
       </section>
       <!-- <section class="popup-base">
-        <div class="prompt-text">Ok Add ..................</div>
-        <button class="approved-btn">Perfect</button>
-        <button class="cancel_btn">No, Cancel</button>
+        <div class="pop-up-footer">Ok Add ..................</div>
+        <button class="btn_class white_btn_class_unselected">Perfect</button>
+        <button class="btn_class white_btn_class_selected">No, Cancel</button>
       </section> -->
     </main>
 

@@ -1,8 +1,9 @@
 var OpenAI = require("openai");
+var API_KEY_SERVICE = require("./secretManager");
 const openai = new OpenAI({
-  apiKey:
-    "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",
+  apiKey: await API_KEY_SERVICE.getKey(),
 });
+//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
 const background = `Dialogue: 200 Rs me 2.5 per kg ke hissab se Raju bhai se mal mangvaya 100 Rs ka discount bhi mila
 What is the vendor_name, rate_per_kg, discount, weight and price of the good ?
 Completion: {"vendor_name": "Raju Bhai", "rate_per_kg":2.5,"price": 200, "discount": 100, "weight": 80}

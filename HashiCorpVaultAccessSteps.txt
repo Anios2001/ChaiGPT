@@ -1,0 +1,18 @@
+//Curl to get the value of key stored
+curl ^
+--location "https://api.cloud.hashicorp.com/secrets/2023-11-28/organizations/6660c11b-5540-429e-9bc7-89ccafb9e730/projects/1bccd6ef-0699-4549-910a-43fedb9ec5a3/apps/my-default-app/secrets:open" ^
+--request GET ^
+--header "Authorization: Bearer %HCP_API_TOKEN%" | jq -r .secrets[0].static_version.value
+//Curl to get access token 
+curl ^
+--location "https://auth.idp.hashicorp.com/oauth2/token" ^
+--header "Content-Type: application/x-www-form-urlencoded" ^
+--data-urlencode "client_id=%HCP_CLIENT_ID%" ^
+--data-urlencode "client_secret=%HCP_CLIENT_SECRET%" ^
+--data-urlencode "grant_type=client_credentials" ^
+--data-urlencode "audience=https://api.hashicorp.cloud"
+//Environment Variables needed to access the token
+HCP_CLIENT_ID= 
+TuKHuzWiStV2bwybknHxce0hMJg4JW16
+HCP_CLIENT_SECRET=
+Z8UDRXSZo1beZmgVOzCrncQTj29ZnPTXjYi2UEF6t_knu3MIRLiOUKCJJKX2rvpB

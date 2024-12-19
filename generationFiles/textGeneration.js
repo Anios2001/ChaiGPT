@@ -1,8 +1,12 @@
 var OpenAI = require("openai");
-var {API_KEY_SERVICE} = require("./secretManager.js");
-const openai = new OpenAI({
-  apiKey: await API_KEY_SERVICE.getKey(),
-});
+const { getkey } = require("./secretManager");
+var openai;
+async function initiateOpenAI() {
+  const apiKey = await getkey();
+  openai = new OpenAI({
+    apiKey: apiKey,
+  });
+}
 const background = `Dialogue: 200 Rs me 2.5 per kg ke hissab se Raju bhai se mal mangvaya 100 Rs ka discount bhi mila
 What is the vendor_name, rate_per_kg, discount, weight and price of the good ?
 Completion: {"vendor_name": "Raju Bhai", "rate_per_kg":2.5,"price": 200, "discount": 100, "weight": 80}

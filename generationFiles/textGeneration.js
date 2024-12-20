@@ -30,4 +30,4 @@ async function getGeneration(user_prompt_text) {
 function getGenerationDummy() {
   return `{"vendor_name":"Chry","rate_per_kg":1.66,"price":10,"discount":10,"weight":24}`;
 }
-module.exports = { getGeneration, getGenerationDummy };
+module.exports = { initiateOpenAI, getGeneration, getGenerationDummy };

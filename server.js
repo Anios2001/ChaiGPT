@@ -293,8 +293,8 @@ streamingServer.listen(port, async () => {
   // databaseInstance.defineConnectionStrings(
   //   "mongodb+srv://anipoptani123:1tOlp7JOrehLiWeF@cluster0.01ewbcd.mongodb.net/?retryWrites=true&w=majority"
   // );
-  databaseInstance.defineConnectionStrings();
-  databaseInstance.createConnection();
+  await databaseInstance.defineConnectionStrings();
+  await databaseInstance.createConnection();
   //await databaseInstance.testConnection();
   databaseInstance.provideMetaData();
 });

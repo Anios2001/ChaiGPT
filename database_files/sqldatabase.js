@@ -1,5 +1,6 @@
 const Database = require("./databaseClass");
 const mysql = require("mysql2/promise");
+const { Connector } = require("@google-cloud/cloud-sql-connector");
 const {
   getToken,
   getHash,
@@ -9,18 +10,34 @@ const {
 } = require("../token_files/getToken");
 class SQLDatabase extends Database {
   connection;
+  clientOpts;
+  pool;
+  connector;
   SQLDatabase() {}
   async createConnection() {
-    this.connection = await mysql.createConnection(this.connectionProperties);
+    // this.connection = await mysql.createConnection(this.connectionProperties);
     // this.connection.connect();
+    this.connection = await this.pool.getConnection();
   }
-  defineConnectionStrings() {
-    this.connectionProperties = {
-      host: "localhost",
-      user: "root",
+  async defineConnectionStrings() {
+    const connector = new Connector();
+    this.clientOpts = await connector.getOptions({
+      instanceConnectionName: "micro-spanner-404517:asia-south1:mysqlcloud",
+      ipType: "PUBLIC",
+    });
+    this.pool = await mysql.createPool({
+      ...this.clientOpts,
+      user: "aniket",
+      password: "aniket9644#",
       database: "chaigpt",
-      password: "aniket",
-    };
+    });
+
+    // this.connectionProperties = {
+    //   host: "localhost",
+    //   user: "root",
+    //   database: "chaigpt",
+    //   password: "aniket",
+    // };
   }
   async checkMemberShip(user_id) {
     try {
@@ -36,10 +53,9 @@ class SQLDatabase extends Database {
   provideMetaData() {}
   async testConnection() {
     try {
-      const [res] = await this.connection.query(
-        'SHOW `status` LIKE "Ssl_cipher"'
-      );
-      await connection.end();
+      const [res] = await this.connection.query("Select 2*3");
+      console.log(res);
+      await this.connection.end();
       console.log(res);
     } catch (err) {
       console.error("MySQLConnectionTestError", err);
@@ -171,3 +187,9 @@ class SQLDatabase extends Database {
   }
 }
 module.exports = SQLDatabase;
+// const databaseOb = new SQLDatabase();
+// databaseOb
+//   .defineConnectionStrings()
+//   .then(() =>
+//     databaseOb.createConnection().then(() => databaseOb.testConnection())
+//   );

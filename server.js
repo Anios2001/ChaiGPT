@@ -26,6 +26,7 @@ const SQLDatabase = require("./database_files/sqldatabase");
 const { getAnswer } = require("./google_speech_client");
 // GPT generation Library
 const {
+  initiateOpenAI,
   getGeneration,
   getGenerationDummy,
 } = require("./generationFiles/textGeneration");
@@ -195,6 +196,7 @@ app.post("/processAudioCommand", uploader.single("audio"), async (req, res) => {
     // //send for google speech recog
     const text = await getAnswer(`audio_files//${audioFile.filename}.mp3`);
     // //answer to my own GPT command
+    await initiateOpenAI();
     const generation = await getGeneration(text);
     const generationJSON = JSON.parse(generation);
     console.log(generationJSON);
@@ -291,8 +293,8 @@ streamingServer.listen(port, async () => {
   // databaseInstance.defineConnectionStrings(
   //   "mongodb+srv://anipoptani123:1tOlp7JOrehLiWeF@cluster0.01ewbcd.mongodb.net/?retryWrites=true&w=majority"
   // );
-  databaseInstance.defineConnectionStrings();
-  databaseInstance.createConnection();
+  await databaseInstance.defineConnectionStrings();
+  await databaseInstance.createConnection();
   //await databaseInstance.testConnection();
   databaseInstance.provideMetaData();
 });

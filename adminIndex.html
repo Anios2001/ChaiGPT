@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Sales Bot Admin</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, height=device-height" />
+        
+        <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+        <link rel="stylesheet" href="css/styles.css" />
+    </head>
+    <body>
+        <div id="login_page">
+            <h1 class="greenText heading_style">Login</h1>
+            <p class="para-txt">
+              Welcome to Chai GPT Admin system.....<br />Enter your email
+              and password to enter....
+            </p>
+            <div id="loginLoad" class="loader hidden"></div>
+            <form id="login_form" class="container_base login-container">
+              <input
+                class="text_field_style"
+                type="email"
+                name="admin_email"
+                id="u_email_box"
+                placeholder="Email"
+              />
+              <input
+                class="text_field_style"
+                type="password"
+                name="admin_password"
+                id="u_password_box"
+                placeholder="Password"
+              />
+              <input
+                class="register-btn"
+                type="submit"
+                value="Enter your portal"
+              />
+            </form>
+        </div>
+        <h1 id="admin_head" class="greenText heading_style hidden">
+          Admin Portal
+        </p>
+        <div id="admin-panel" class="admin-btn-panel hidden">        
+        <button id="update_btn" class="admin-btn">Update</button>
+        <button id="logout_btn" class="admin-btn">Logout</button>
+        </div>
+        <div id="table_view" style="height: 50vh;position: relative;top: 75px;"></div>
+        <script type="text/javascript" src="js/adminApi.js"></script>
+    </body>
+</html>

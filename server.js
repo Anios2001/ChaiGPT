@@ -50,6 +50,7 @@ const socketServices = socket(streamingServer);
 app.use(express.static(path.join(__dirname, "")));
 // register json format to be used for incoming requests only not responses
 app.use(express.json());
+
 //Socket connector distribution code
 //Required for socket functionality....
 app.get("/socket.io/socket.io.js", (req, res) => {
@@ -215,6 +216,35 @@ app.get("/getDataStream", async (req, res) => {
   //     });
   //  });
 });
+app.post("/getUsers", async (req, res)=>{
+  console.group("Serving Admin GET");
+  const auth_data= req.body;
+  var result = await databaseInstance.checkAdminRegisteration(auth_data);
+  if(result.isRegistered){
+  var users=await  databaseInstance.getAllUsers();
+  res.json(users);
+  }
+  else
+  res.json({message:"You are not admin!"});
+  console.groupEnd("Serving Admin GET");
+});
+app.post("/setPrivellege", async (req,res)=>{
+  console.group("Serving Admin POST");
+  var packet= req.body;
+  var ulist= packet.userPrivelleges;
+  //console.log(ulist);
+  var adminRegister = await databaseInstance.checkAdminRegisteration(packet.auth_data);
+  if(adminRegister.isRegistered){
+  var result = await databaseInstance.changePrivellege(ulist);
+  //var updatedData= await databaseInstance.getAllUsers();
+  res.json(result);
+  }
+  else{
+    res.json({message:"You are not admin!"})
+  }
+  console.groupEnd("Serving Admin POST");
+});
+
 //3 authenticate user using email and password
 app.post("/authenticate", async (req, res) => {
   const auth_data = req.body;
@@ -222,10 +252,17 @@ app.post("/authenticate", async (req, res) => {
   console.log("Auth Request ");
 
   var result = await databaseInstance.checkRegisteration(auth_data);
-  if (result.isRegistered) {
+  if (result.isRegistered && ('allowed' in result) && result.allowed) {
     console.log(result.auth_id);
-    res.json({ auth_id: result.auth_id, is_authenticated: true });
-  } else res.json({ auth_id: "", is_authenticated: false });
+    res.json({ auth_id: result.auth_id, is_authenticated: true ,allowed:true});
+  } else if(result.isRegistered && ('allowed' in result) && !result.allowed){
+    res.json({auth_id: result.auth_id, is_authenticated:true, allowed:false});
+  }
+  else if(('isRegistered' in result) && ('auth_id' in result)) res.json({ auth_id: "", is_authenticated: false });
+  else {
+    console.log("SQL Error");
+    res.sendStatus(500);
+  }
   console.groupEnd("Serving Authenticate Request");
 });
 //Socket connection handlers registration.....
@@ -282,6 +319,10 @@ socketServices.on("connection", (c_id) => {
       socketServices.emit("initialRecords", sale_records);
     } else socketServices.emit("wrong_auth", "User not registered");
   });
+  c_id.on("disconnect", (reason)=>{
+    console.log("Client disconnected!",c_id.id);
+    console.log("Disconnect Reason ",reason);
+  });
 });
 //Start the server on port specified above....
 //start listening for user request and responses
@@ -297,4 +338,5 @@ streamingServer.listen(port, async () => {
   await databaseInstance.createConnection();
   //await databaseInstance.testConnection();
   databaseInstance.provideMetaData();
+  
 });

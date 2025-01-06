@@ -35,6 +35,7 @@ async function getCrypticHash(data) {
 async function checkPassword(password, hashedPass) {
   return bcrypt.compare(password, hashedPass);
 }
+//getCrypticHash("aniket9644#").then((str)=>console.log(str));
 module.exports = {
   getToken,
   getHash,

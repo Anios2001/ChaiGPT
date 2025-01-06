@@ -19,6 +19,7 @@ class SQLDatabase extends Database {
     // this.connection.connect();
     this.connection = await this.pool.getConnection();
   }
+  
   async defineConnectionStrings() {
     const connector = new Connector();
     this.clientOpts = await connector.getOptions({
@@ -34,15 +35,53 @@ class SQLDatabase extends Database {
 
     // this.connectionProperties = {
     //   host: "localhost",
+    //   port: 13306,
     //   user: "root",
     //   database: "chaigpt",
     //   password: "aniket",
     // };
   }
+  async changePrivellege(userPrivelleges){
+    try {
+      var enabledUsers= Array(0);
+      var disabledUsers= Array(0);
+
+      for(let user of userPrivelleges){
+        if(user.allowed == 'ENABLED')
+          enabledUsers.push(user.user_id);
+        else
+          disabledUsers.push(user.user_id);
+      }
+      console.log(userPrivelleges);
+      console.log(enabledUsers);
+      console.log(disabledUsers);
+      const sqlQuery1= `Update users set allowed="ENABLED" where user_id in (?)`;
+      const result1 = await this.connection.execute(sqlQuery1,[enabledUsers.join(',')]);
+      const sqlQuery2= `Update users set allowed="DISABLED" where user_id in (?)`;
+      const result2 = await this.connection.execute(sqlQuery2,[disabledUsers.join(',')]);
+      console.log("Affected Rows",result1[0].changedRows + result2[0].changedRows);
+      return {"rowsUpdated":result1[0].changedRows + result2[0].changedRows};
+    }
+    catch(e){
+      console.error("MySQLUpdateError", e);
+      return {"error":e};
+    }
+  }
+  async getAllUsers(){
+    try {
+      const [rows,fields] = await this.connection.query(`Select * from users`);
+      console.log(rows);
+      return {'users':rows};
+    }
+    catch(e){
+      console.error("MySQLUpdateError", e);
+      return {'error':e};
+    }
+  }
   async checkMemberShip(user_id) {
     try {
       const result = await this.connection.query(
-        `select count(*) as items from users where user_id like '${user_id}'`
+        `select count(*) as items from users where user_id like '${user_id}' and allowed like 'ENABLED'`
       );
       console.log(result[0][0].items);
       return result[0][0].items > 0;
@@ -87,7 +126,7 @@ class SQLDatabase extends Database {
   async createNewUser(userdata) {
     try {
       const [rows, fields] = await this.connection.query(
-        `insert into users values ('${userdata.token}','${userdata.email}','${userdata.pass}','${userdata.address}','${userdata.phone}','${userdata.name}')`
+        `insert into users values ('${userdata.token}','${userdata.email}','${userdata.pass}','${userdata.address}','${userdata.phone}','${userdata.name}',"DISABLED")`
       );
       if (rows && rows.affectedRows) return rows.affectedRows;
       else return 0;
@@ -162,11 +201,33 @@ class SQLDatabase extends Database {
       const [rows, fields] = await this.connection.query(
         `Select * from users where email like '${auth_data.email}'`
       );
+      
       const passCorrect = await checkPassword(
         auth_data.password,
         rows[0].password
       );
-      if (passCorrect) return { isRegistered: true, auth_id: rows[0].user_id };
+      const isAllowed= await this.connection.query(`Select allowed from users where email like '${auth_data.email}'`);
+      console.log(isAllowed);
+      if (passCorrect && isAllowed[0][0]['allowed']=='ENABLED') return { isRegistered: true, auth_id: rows[0].user_id,allowed:true };
+      else if(passCorrect && isAllowed[0][0]['allowed']=='DISABLED') return {isRegistered:true, auth_id: rows[0].user_id,allowed:false};
+      else return { isRegistered: false, auth_id: "" };
+    } catch (e) {
+      console.error("MySQLDataSelectionError", e);
+      return {};
+    }
+  }
+  async checkAdminRegisteration(auth_data){
+    try {
+      const [rows, fields] = await this.connection.query(
+        `Select * from admins where email like '${auth_data.email}'`
+      );
+      if(rows.length == 0)
+        return {isRegistered:false,auth_id: ""};
+      const passCorrect = await checkPassword(
+        auth_data.password,
+        rows[0].password
+      );
+      if (passCorrect) return { isRegistered: true, auth_id: rows[0].email};
       else return { isRegistered: false, auth_id: "" };
     } catch (e) {
       console.error("MySQLDataSelectionError", e);
@@ -178,7 +239,7 @@ class SQLDatabase extends Database {
       const [rows, fields] = await this.connection.query(
         `Select * from sales where user_id like '${auth_id}'`
       );
-      console.log(rows);
+      //console.log(rows);
       return { isSuccess: true, list: rows };
     } catch (e) {
       console.error("MySQLDataSelectionError", e);
@@ -187,9 +248,4 @@ class SQLDatabase extends Database {
   }
 }
 module.exports = SQLDatabase;
-// const databaseOb = new SQLDatabase();
-// databaseOb
-//   .defineConnectionStrings()
-//   .then(() =>
-//     databaseOb.createConnection().then(() => databaseOb.testConnection())
-//   );
+

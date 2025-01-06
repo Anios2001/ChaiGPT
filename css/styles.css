@@ -206,6 +206,28 @@ input:required{
     font-weight: 600;
     /* box-shadow: 0px 0px 5px rgb(44, 195, 208); */
 }
+.admin-btn-panel{
+  position: absolute;
+  left: 15vw;
+  top:5vh;
+  height: 20vh;
+  display: flex;
+  flex-direction: row;
+  width: 80vw;
+}
+.admin-btn{
+  border: solid;
+  width: 40%;
+  height: 20%;
+  border-radius: 5px;
+  background-color: black;
+  color: beige;
+  font-weight: 700;
+}
+.admin-btn:hover{
+  background-color: beige;
+    color: black;
+}
 .register-btn{
     border: solid;
     width: 50%;
@@ -421,4 +443,49 @@ input:required{
 }
 #register_page{
   display: none;
+}
+/* Style the switch (optional, for demonstration purposes) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
 }

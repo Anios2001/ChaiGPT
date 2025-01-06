@@ -79,7 +79,7 @@ const columnDefination = [
           sale_id: selectedData.sale_id,
           user_id: selectedData.user_id,
         });
-        console.log(`Deleting Sale Record ${selectedData.sale_id}`);
+        //console.log(`Deleting Sale Record ${selectedData.sale_id}`);
       });
 
       return deleteBtn;
@@ -270,7 +270,7 @@ function hideSuccessPopup() {
 //Client Business Logic Code starts below............................................
 //Register Process ..
 const register = async function (user_data) {
-  console.log(JSON.stringify(user_data));
+  //console.log(JSON.stringify(user_data));
   return fetch("/register", {
     method: "POST",
     headers: {
@@ -279,13 +279,13 @@ const register = async function (user_data) {
     body: JSON.stringify(user_data),
   })
     .then((response) => {
-      console.log(response);
+      //console.log(response);
       if (response.ok) return response.json();
       throw new Error("Network Response is not ok");
     })
     .then((data) => {
       if (data && data["auth_id"] == "") {
-        console.log(data["auth_id"]);
+        //console.log(data["auth_id"]);
         return "";
       } else return data["auth_id"];
     })
@@ -295,7 +295,8 @@ const register = async function (user_data) {
 };
 //Authentication Process .....
 const authenticate = async function (data) {
-  console.group("Client Auth Interface");
+ // console.group("Client Auth Interface");
+  
   return fetch("/authenticate", {
     method: "POST",
     headers: {
@@ -308,13 +309,20 @@ const authenticate = async function (data) {
       throw new Error("Network Response is not ok");
     })
     .then((data) => {
-      console.log(data);
-      console.groupEnd("Client Auth Interface");
-      if (data && data["auth_id"] == "") return "";
-      else {
+      //console.log(data);
+      //console.groupEnd("Client Auth Interface");
+      if (!data['is_authenticated']) return "Not Registered! Please Sign In!";
+      else if(data['is_authenticated']){
+        if(!data['allowed'])
+        {
+          return "You are not authorised! Contact 7999733632 Aniket Poptani";
+        }
+        else{
         auth_id = data["auth_id"];
-        return data["auth_id"];
+        return {'auth_id':data["auth_id"],'allowed':data["allowed"]};
+        }
       }
+      
     })
     .catch((e) => {
       localStorage.setItem("error", e);
@@ -323,6 +331,9 @@ const authenticate = async function (data) {
 function removeLoadedScript() {
   const scripts = document.head.getElementsByTagName("script");
   for (let script of scripts) document.head.removeChild(script);
+}
+function closeSocketConnection(){
+  socket_handler.disconnect();
 }
 function removeKeyEventListeners() {
   document.removeEventListener("keydown", keyDownEvent);
@@ -351,7 +362,7 @@ function getRecordingAPI(auth_key) {
   }
   const auth_id = new URLSearchParams();
   auth_id.append("okta", auth_key);
-  console.log("Message Auth Id", auth_id);
+ // console.log("Message Auth Id", auth_id);
   fetch(`/recorderApi?${auth_id}`, {
     method: "GET",
   })
@@ -450,18 +461,18 @@ function transferMultiPartData(auth_id, data) {
       let timePart = date.toISOString().split("T")[1].split("Z")[0];
       let sqlDateTimeFormat = datePart + " " + timePart;
       dataP["timestamp"] = sqlDateTimeFormat;
-      console.log(dataP);
-      console.log(len);
+      //console.log(dataP);
+      //console.log(len);
       if (len && len > 0) {
         displayProcessedAnswer(auth_id, dataP);
       } else {
-        console.log("result from server not properly formatted");
+        console.error("result from server not properly formatted");
       }
-      console.groupEnd("Audio Transfer Process");
+      //console.groupEnd("Audio Transfer Process");
     })
     .catch((e) => {
       console.error(e);
-      console.groupEnd("Audio Transfer Process");
+      //console.groupEnd("Audio Transfer Process");
     });
 }
 //Submit the email and password for authentication
@@ -505,6 +516,7 @@ function logoutUser() {
           auth_id = null;
           removeLoadedScript();
           removeKeyEventListeners();
+          closeSocketConnection();
           gridHolder.innerHTML = "";
           gridApi = null;
           gridHolder = null;
@@ -513,10 +525,15 @@ function logoutUser() {
   }
 }
 //Check the vailidity of auth Token recived or used from the cached storage
-function checkResults(auth_token) {
-  if (auth_token == undefined || auth_token == null) return 102;
-  else if (/^\s*$/.test(auth_token)) return 103;
-  else return 1;
+function checkResults(result) {
+  //console.log(typeof(result))
+  if(typeof(result) != 'object')
+  {
+    return 102;
+  }
+  else{
+    return 1;
+  }
 }
 //Attach the keyEvents to listeners
 function setUpAudioEvents() {
@@ -528,7 +545,7 @@ function keyDownEvent(event) {
   if ((event.key == "Q" || event.key == "q") && !keyPressed && !isrecording) {
     keyPressed = true;
     isrecording = true;
-    console.group("RECORDING_API");
+    //console.group("RECORDING_API");
     showListeningDialog();
     Recorder.startRecording();
   }
@@ -541,12 +558,12 @@ function keyUpEvent(event) {
       isrecording = false;
       if (audioBlob == null || audioBlob == undefined) {
         console.error("Error while recording the audio...");
-        console.groupEnd("RECORDING_API");
+        //console.groupEnd("RECORDING_API");
       } else {
         //Send the blob as a multipart Form Data to the server for processing
-        console.groupEnd("RECORDING_API");
-        console.group("Audio Transfer Process");
-        console.log(auth_id);
+        //console.groupEnd("RECORDING_API");
+        //console.group("Audio Transfer Process");
+        //console.log(auth_id);
         if (auth_id != null) transferMultiPartData(auth_id, audioBlob);
       }
     });
@@ -555,7 +572,7 @@ function keyUpEvent(event) {
 //Utility function display red bar error at client side takes error string
 function showError(errorString) {
   showErrorPopup(errorString);
-  console.error(errorString);
+ // console.error(errorString);
 }
 //Not using now
 //Set up the functionality of sockets.....
@@ -583,7 +600,7 @@ function bindSocket() {
   socket_handler.on("avgRevenue", (data) => {});
   socket_handler.on("initialRecords", (data) => {
     if (data.isSuccess) {
-      console.log(data.list.constructor.toString());
+      //console.log(data.list.constructor.toString());
       displayTableData(data.list);
     } else console.log("Data Retrieval Failed");
   });
@@ -676,6 +693,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //Submit the form for custom execution....
     submitForm(email, password).then((response) => {
       //Check response validity....
+      //console.log(typeof response);
       const res_code = checkResults(response);
       switch (res_code) {
         case 1:
@@ -687,9 +705,9 @@ document.addEventListener("DOMContentLoaded", () => {
           openPortal(response);
           initiateRealTimeConnection(response);
           //Get Recording API using auth_id
-          console.group("Recording API Loading Process");
+          //console.group("Recording API Loading Process");
           getRecordingAPI(response);
-          console.groupEnd("Recording API Loading Process");
+          //console.groupEnd("Recording API Loading Process");
           //Attach redorder api to events
           setUpAudioEvents();
           //Attach logout Action
@@ -700,19 +718,18 @@ document.addEventListener("DOMContentLoaded", () => {
           });
           //Get and attach real time data service...
           //Not Implemented...
-          console.group("Socket Service Loading Process");
+          //console.group("Socket Service Loading Process");
           // connectToRealTimeData(response);
-          console.groupEnd("Socket Service Loading Process");
+          //console.groupEnd("Socket Service Loading Process");
           break;
         case 102:
-        case 103:
           //Remove loading from view
           loginLoader.style.display = "none";
           //Show error
           showError(response);
           //Revert the login screen display
           loginForm.style.display = "block";
-          break;
+          break;  
         default:
           //Remove loading on network errors
           loginLoader.style.display = "none";
@@ -727,7 +744,7 @@ document.addEventListener("DOMContentLoaded", () => {
   registerLoader.style.display = "none";
   registerForm.addEventListener("submit", function (event) {
     event.preventDefault();
-    console.log("clicked");
+    //console.log("clicked");
     var email = registerForm.elements["r_user_email"].value;
     var password = registerForm.elements["r_user_password"].value;
     var name = registerForm.elements["user_name"].value;
@@ -744,7 +761,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //Display loading ....
     registerLoader.style.display = "block";
     submitRegistration(data).then((response) => {
-      console.log(response);
+      //console.log(response);
       registerLoader.style.display = "none";
       registerForm.reset();
       registerForm.style.display = "";

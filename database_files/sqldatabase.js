@@ -248,9 +248,4 @@ class SQLDatabase extends Database {
   }
 }
 module.exports = SQLDatabase;
-// const databaseOb = new SQLDatabase();
-// databaseOb
-//   .defineConnectionStrings()
-//   .then(() =>
-//     databaseOb.createConnection().then(() => databaseOb.checkAdminRegisteration({email:"aniketpoptani10@gmail.com",password:"aniket9644#"}).then(result=>console.log(result)))
-//   );
+

@@ -23,7 +23,7 @@ class SQLDatabase extends Database {
   async defineConnectionStrings() {
     const connector = new Connector();
     this.clientOpts = await connector.getOptions({
-      instanceConnectionName: "micro-spanner-404517:asia-south1:mysqlcloud",
+      instanceConnectionName: "alien-bricolage-448915-f6:us-central1:chaigptsqlcloud",
       ipType: "PUBLIC",
     });
     this.pool = await mysql.createPool({

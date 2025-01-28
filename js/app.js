@@ -367,8 +367,9 @@ function getRecordingAPI(res) {
     method: "GET",
   })
     .then((response) => {
-      response.blob().then((blob) => {
+      response.blob().then(async (blob) => {
         const url = window.URL.createObjectURL(blob);
+        await navigator.mediaDevices.getUserMedia({audio:true});
         loadScript(url, () => {
           console.log("Recorder Initiated!");
         });
@@ -463,10 +464,11 @@ function transferMultiPartData(auth_id, data) {
       dataP["timestamp"] = sqlDateTimeFormat;
       //console.log(dataP);
       //console.log(len);
-      if (len && len > 0) {
+      if (len && len == 5) {
         displayProcessedAnswer(auth_id, dataP);
       } else {
         console.error("result from server not properly formatted");
+        hideWaitingForServerDialog();
       }
       //console.groupEnd("Audio Transfer Process");
     })

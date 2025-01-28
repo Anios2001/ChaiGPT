@@ -37,4 +37,4 @@ async function getKey() {
   const data = await response.json();
   return data.secrets[0].static_version.value;
 }
-module.exports = { getKey };
+module.exports = {getKey};

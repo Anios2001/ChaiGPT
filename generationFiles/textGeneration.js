@@ -1,8 +1,8 @@
 var OpenAI = require("openai");
-const { getkey } = require("./secretManager");
+const { getKey } = require("./secretManager.js");
 var openai;
 async function initiateOpenAI() {
-  const apiKey = await getkey();
+  const apiKey = await getKey();
   openai = new OpenAI({
     apiKey: apiKey,
   });

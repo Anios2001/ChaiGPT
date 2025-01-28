@@ -199,9 +199,14 @@ app.post("/processAudioCommand", uploader.single("audio"), async (req, res) => {
     // //answer to my own GPT command
     await initiateOpenAI();
     const generation = await getGeneration(text);
+    try{
     const generationJSON = JSON.parse(generation);
     console.log(generationJSON);
     res.json(generationJSON);
+    }
+    catch(e){
+      res.json({'error':"Unable to parse try again"});
+    }
   } catch (e) {
     console.error(e);
   }
@@ -285,7 +290,18 @@ socketServices.on("connection", (c_id) => {
           "net",
           recordData.user_id
         );
+        
+      const todaysRevenue = await databaseInstance.sumTodaysColumnValue(
+        "net",
+        recordData.user_id
+      );
+      const avgDiscount = await databaseInstance.avgColumnRows(
+        "discount",
+        recordData.user_id
+      );
         socketServices.emit("totalRevenueUpdate", newRevenue);
+        socketServices.emit("avgDiscount", avgDiscount);
+        socketServices.emit("totalTodaysRevenue", todaysRevenue);
         socketServices.emit("deletionComplete", recordData);
       } else socketServices.emit("deletionFailed", recordData);
     }

@@ -353,15 +353,15 @@ function loadScript(url, callback) {
   document.head.appendChild(script);
 }
 //Recording API loginLoader using auth_key
-function getRecordingAPI(auth_key) {
-  if (auth_key == null || auth_key == undefined) {
+function getRecordingAPI(res) {
+  if (res == null || res == undefined) {
     console.error(
       "Real time connection initaited but with null or undefined auth_key"
     );
     return;
   }
   const auth_id = new URLSearchParams();
-  auth_id.append("okta", auth_key);
+  auth_id.append("okta", res.auth_id);
  // console.log("Message Auth Id", auth_id);
   fetch(`/recorderApi?${auth_id}`, {
     method: "GET",

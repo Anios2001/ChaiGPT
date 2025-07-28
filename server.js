@@ -21,7 +21,9 @@ const tokenGenerator = require("./token_files/getToken");
 // Database Library
 const MongoDatabase = require("./database_files/mongodatabase");
 const RedisDataBase = require("./database_files/redisDatabase");
-const SQLDatabase = require("./database_files/sqldatabase");
+let SQLiteDatabase;
+
+
 // Google Speech to Text
 const { getAnswer } = require("./google_speech_client");
 // GPT generation Library
@@ -224,6 +226,7 @@ app.get("/getDataStream", async (req, res) => {
 app.post("/getUsers", async (req, res)=>{
   console.group("Serving Admin GET");
   const auth_data= req.body;
+  console.log(auth_data);
   var result = await databaseInstance.checkAdminRegisteration(auth_data);
   if(result.isRegistered){
   var users=await  databaseInstance.getAllUsers();
@@ -254,8 +257,8 @@ app.post("/setPrivellege", async (req,res)=>{
 app.post("/authenticate", async (req, res) => {
   const auth_data = req.body;
   console.group("Serving Authenticate Request");
-  console.log("Auth Request ");
-
+  console.log("Auth Request ",auth_data);
+  var result1 = await databaseInstance.initSteps(); 
   var result = await databaseInstance.checkRegisteration(auth_data);
   if (result.isRegistered && ('allowed' in result) && result.allowed) {
     console.log(result.auth_id);
@@ -346,13 +349,21 @@ socketServices.on("connection", (c_id) => {
 streamingServer.listen(port, async () => {
   console.log(`Listening on port: `, port);
   //  const socket= initiateSocketConnection();
-  databaseInstance = new SQLDatabase();
+  (async ()=>{
+  const module = await import('./database_files/sqliteDatabase.js');
+  SQLiteDatabase= module.SQLiteDatabase;
+  if(SQLiteDatabase !== undefined){
+     databaseInstance = new SQLiteDatabase();
+    //  databaseInstance.defineConnectionStrings();
+     await databaseInstance.createConnection();
+  //await databaseInstance.testConnection();
+    //  databaseInstance.provideMetaData();
+  }
+  })();
+  
   // databaseInstance.defineConnectionStrings(
   //   "mongodb+srv://anipoptani123:1tOlp7JOrehLiWeF@cluster0.01ewbcd.mongodb.net/?retryWrites=true&w=majority"
   // );
-  await databaseInstance.defineConnectionStrings();
-  await databaseInstance.createConnection();
-  //await databaseInstance.testConnection();
-  databaseInstance.provideMetaData();
+  
   
 });

@@ -1,13 +1,6 @@
 //SINGLE PAGE APPLICATION
 //Client Socket Connection Handler
 var socket_handler = null;
-// === API BASE URL CONFIGURATION ===
-// Set your Render URL below:
-const RENDER_URL = 'https://chaigpt.onrender.com'; // <-- Replace with your actual Render URL
-// For local Android emulator development, use:
-// const API_BASE_URL = window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android' ? 'http://10.0.2.2:3000' : RENDER_URL;
-// For production (web and Android):
-const API_BASE_URL = RENDER_URL;
 //Initialization of key process tracking variables
 var keyPressed = false;
 var isrecording = false;
@@ -141,7 +134,7 @@ function setUpApproveAndCancelListeners(displayContext, auth_id, data) {
   const abortBtn = document.getElementById("abortNewRecord");
   // console.log("Control Reaches Here");
   approveBtn.addEventListener("click", (event) => {
-    fetch("${API_BASE_URL}/addSalesRecord", {
+    fetch("/addSalesRecord", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -278,7 +271,7 @@ function hideSuccessPopup() {
 //Register Process ..
 const register = async function (user_data) {
   //console.log(JSON.stringify(user_data));
-  return fetch(`${API_BASE_URL}/register`, {
+  return fetch("/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -304,7 +297,7 @@ const register = async function (user_data) {
 const authenticate = async function (data) {
  // console.group("Client Auth Interface");
   
-  return fetch(`${API_BASE_URL}/authenticate`, {
+  return fetch("/authenticate", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -370,7 +363,7 @@ function getRecordingAPI(res) {
   const auth_id = new URLSearchParams();
   auth_id.append("okta", res.auth_id);
  // console.log("Message Auth Id", auth_id);
-  fetch(`${API_BASE_URL}/recorderApi?${auth_id}`, {
+  fetch(`/recorderApi?${auth_id}`, {
     method: "GET",
   })
     .then((response) => {
@@ -399,7 +392,7 @@ function initiateRealTimeConnection(auth_key) {
     return;
   }
   const auth_id = new URLSearchParams(auth_key).toString();
-  fetch(`${API_BASE_URL}/socket.io/socket.io.js?${auth_id}`)
+  fetch(`/socket.io/socket.io.js?${auth_id}`)
     .then((response) => {
       response.blob().then((blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -451,7 +444,7 @@ function transferMultiPartData(auth_id, data) {
   showWaitingForServerDialog();
   formdata.append("audio", data, "user_audio.mp3");
   //formdata.forEach.apply((param) => console.log(param));
-  fetch(`${API_BASE_URL}/processAudioCommand`, {
+  fetch("/processAudioCommand", {
     method: "POST",
     body: formdata,
   })
@@ -505,7 +498,7 @@ function logoutUser() {
     loginForm.style.display = "none";
     const loginLoader = document.getElementById("loginLoad");
     loginLoader.style.display = "block";
-    fetch(`${API_BASE_URL}/logoutUser`, {
+    fetch("/logoutUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

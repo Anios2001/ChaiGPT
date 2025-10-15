@@ -1,8 +1,8 @@
 
 //const data= {email:"aniketpoptani100@gmail.com",password:"aniket9644#"};
-// const myTheme = agGrid.themeQuartz.withParams({
-//     headerTextColor: "white",
-//   });
+const myTheme = agGrid.themeQuartz.withParams({
+    headerTextColor: "white",
+  });
 const columnDefination = [{field:"user_name"},
                           {field:"enable",cellRenderer:function(params){
                             var labelElement= document.createElement("label");

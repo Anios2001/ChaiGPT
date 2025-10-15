@@ -126,8 +126,8 @@ export class SQLiteDatabase extends Database{
   
   async deleteRecord(sale_id, user_id) {
     try {
-      const rows= await this.connection.all(
-        `DELETE FROM sales WHERE user_id='${user_id}' AND sale_id='${sale_id}'`
+      const rows= await this.connection.run(
+        `DELETE FROM sales WHERE user_id=? AND sale_id=?`,[user_id,sale_id]
       );
       console.log(rows);
       return rows.changes == 1;

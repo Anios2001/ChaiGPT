@@ -12,6 +12,13 @@ const http = require("http");
 const fs = require("fs");
 //Converting the Promise Chaining to async/await type for better management of code
 const util = require("util");
+
+
+//Development Environment only 
+    const cors = require('cors');
+    const allowedOrigins = [ 'http://localhost:8000'];
+   
+
 const writeFileAsync = util.promisify(fs.writeFile);
 const readFileAsync = util.promisify(fs.readFile);
 //Socket Connection Requirement
@@ -23,9 +30,11 @@ const MongoDatabase = require("./database_files/mongodatabase");
 const RedisDataBase = require("./database_files/redisDatabase");
 let SQLiteDatabase;
 
-
+let AssemblyAI= null;
 // Google Speech to Text
-const { getAnswer } = require("./google_speech_client");
+(async ()=>{
+AssemblyAI= await import("./assembly_ai_speech_client.js");
+})();
 // GPT generation Library
 const {
   initiateOpenAI,
@@ -52,6 +61,21 @@ const socketServices = socket(streamingServer);
 app.use(express.static(path.join(__dirname, "")));
 // register json format to be used for incoming requests only not responses
 app.use(express.json());
+
+//Development Environment only
+ app.use(cors({
+      origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+          const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+          return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+      },
+       methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    }));
 
 //Socket connector distribution code
 //Required for socket functionality....
@@ -197,10 +221,16 @@ app.post("/processAudioCommand", uploader.single("audio"), async (req, res) => {
     await writeFileAsync(`audio_files//${audioFile.filename}.mp3`, fileBuffer);
     fs.unlinkSync(audioFile.path);
     // //send for google speech recog
-    const text = await getAnswer(`audio_files//${audioFile.filename}.mp3`);
+    let text=""
+    if(AssemblyAI !== null){
+   
+    text = await AssemblyAI.getAnswer(`audio_files//${audioFile.filename}.mp3`);
+    }
+    else
+       console.log("Assembly AI null");
     // //answer to my own GPT command
-    await initiateOpenAI();
-    const generation = await getGeneration(text);
+     await initiateOpenAI();
+     const generation = await getGeneration(text);
     try{
     const generationJSON = JSON.parse(generation);
     console.log(generationJSON);
